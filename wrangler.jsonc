@@ -1,0 +1,63 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	// Worker name. Also becomes the workers.dev preview hostname:
+	// https://tech-dose.<your-subdomain>.workers.dev
+	"name": "tech-dose",
+	// Keep in sync with the date this config was last reviewed.
+	"compatibility_date": "2026-09-06",
+	"compatibility_flags": ["nodejs_compat"],
+
+	// The app ships as a static Next.js export (./out) plus a small Worker
+	// script that owns /api: passkey (WebAuthn) auth, sessions, and progress
+	// sync backed by D1. Static pages are still served straight from assets.
+	"main": "worker/index.ts",
+	"assets": {
+		"directory": "./out",
+		"binding": "ASSETS",
+		"not_found_handling": "404-page",
+		"html_handling": "auto-trailing-slash",
+		// /api never matches an asset, but be explicit: API requests always
+		// reach the Worker script, everything else is asset-first.
+		"run_worker_first": ["/api/*"]
+	},
+
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "tech-dose-db",
+			// Create with `wrangler d1 create tech-dose-db` and paste the id
+			// here before the first deploy. See DEPLOY.md.
+			"database_id": "e2c41d4f-4e81-4746-9646-ce885f425556",
+			"migrations_dir": "migrations"
+		}
+	],
+
+	// WebAuthn Relying Party config. RP ID is the registrable parent domain
+	// so passkeys can be shared across plan./beta./app.labthrift.com — see
+	// docs/shared-passkeys.md. The workers.dev preview cannot run real
+	// ceremonies with this RP ID (origin/RP mismatch); use `wrangler dev`
+	// with .dev.vars for local testing instead.
+	"vars": {
+		"WEBAUTHN_RP_ID": "labthrift.com",
+		"WEBAUTHN_RP_NAME": "Tech Dose",
+		"WEBAUTHN_ALLOWED_ORIGINS": "https://app.labthrift.com"
+	},
+
+	// Keep the workers.dev preview live alongside the custom domain below,
+	// so the app is reachable at both https://tech-dose.<subdomain>.workers.dev
+	// and https://app.labthrift.com.
+	"workers_dev": true,
+	"preview_urls": true,
+
+	// Production custom domain. Requires labthrift.com to be an active
+	// Cloudflare zone on this account, and app.labthrift.com to have no
+	// pre-existing CNAME/A record (Custom Domains manage DNS + TLS for you).
+	// plan.labthrift.com already exists on the same account/zone as a
+	// separate Worker — this only adds the "app" host.
+	"routes": [
+		{
+			"pattern": "app.labthrift.com",
+			"custom_domain": true
+		}
+	]
+}

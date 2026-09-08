@@ -1,0 +1,6 @@
+# Copy to .dev.vars for local `wrangler dev` testing.
+# localhost is its own valid RP ID, so passkey ceremonies work end-to-end
+# locally even though production uses labthrift.com.
+WEBAUTHN_RP_ID=localhost
+WEBAUTHN_RP_NAME=Tech Dose (dev)
+WEBAUTHN_ALLOWED_ORIGINS=http://localhost:8787
