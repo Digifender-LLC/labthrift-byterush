@@ -59,7 +59,7 @@
     },
     "daily-caution": {
       "id": "daily-caution",
-      "body": "Keep the OS it has for now. Don't erase a machine people still need.\n\nYour plan can still continue — next you'll pick an OS for a future dedicated box, or wait until you find a spare.",
+      "body": "Keep the OS it has for now. Don't erase a machine people still need.\n\nYou can still continue — next you'll pick an OS for a future dedicated box, or wait until you find a spare.",
       "continue": "marketplace-wipe"
     },
     "dedicated-ok": {
@@ -90,7 +90,7 @@
     },
     "marketplace-wipe": {
       "id": "marketplace-wipe",
-      "body": "If it came from Marketplace: wipe before you trust it.\n\n\"Wipe\" means erase the disk and install a fresh OS so old accounts and mystery software are gone.\n\nAlready wiped and dedicated? You'll pick an OS next in the plan.",
+      "body": "If it came from Marketplace: wipe before you trust it.\n\n\"Wipe\" means erase the disk and install a fresh OS so old accounts and mystery software are gone.\n\nAlready wiped and dedicated? You'll pick an OS in the next walkthrough.",
       "continue": "ethernet-gloss"
     },
     "skip-buys": {
@@ -115,7 +115,7 @@
     },
     "ready": {
       "id": "ready",
-      "body": "You're set for the idea of a first lab: one spare computer, left on, nothing fancy bought yet.\n\nYour plan continues with picking an OS — what the computer boots into. Resume from your ByteRush feed when you are ready.",
+      "body": "You're set for the idea of a first lab: one spare computer, left on, nothing fancy bought yet.\n\nNext comes picking an OS — what the computer boots into. Resume from your ByteRush feed when you are ready.",
       "continue": "not-yet"
     },
     "end": {

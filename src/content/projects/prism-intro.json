@@ -14,7 +14,7 @@
   "beats": {
     "start": {
       "id": "start",
-      "body": "Prism is the lighter photo path when Immich feels like too many containers. This run is a stub — enough to decide.",
+      "body": "Prism is the lighter photo path when Immich feels like too many containers. This walkthrough is a short introduction — enough to decide.",
       "continue": "fit"
     },
     "fit": {
