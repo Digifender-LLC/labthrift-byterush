@@ -22,7 +22,7 @@ export function actOnProject(raw:ProgressPayload,id:string,action:ProjectAction,
   case 'advance': {
    if(s.phase!=='active') return p;
    const choice=step.choices?.find(c=>c.next===action.next);
-   if(step.continue!==action.next&&!choice) return p;
+   if(!action.next||(step.continue!==action.next&&!choice)) return p;
    completeStep();effects=[...(step.setsStatus??[]),...(choice?.setsStatus??[])];
    s.path.push(action.next);s.stepId=action.next;break;
   }
