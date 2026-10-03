@@ -39,3 +39,11 @@ Physical touchscreen verification is not available through this browser tool; mo
 No surviving public-site or Plan application references to the old beta host or Runs repository were found in the targeted source audit. Historical provenance/design references remain intentionally descriptive. Main, Plan and ByteRush databases/domains were kept distinct during removal.
 
 Final presentation polish: commit `dcebb16`, Worker version `c1e7a942-7652-4954-aba3-ab357c994142`. Production reload retained the same project step and XP and showed the corrected singular step label. No backend logic changed in this follow-up.
+
+## Portfolio legal-link release — 2026-10-03
+
+Source commit `5157e9b` was pushed to `zemdregon/tech-dose` main and deployed as Worker version `e066da9e-6824-442f-b5de-04c50690db9c`. The welcome screen, topic-selection step and profile now show direct labeled **Draft terms**, **Draft privacy policy** and **Draft cookie notice** links to Digifender's LabThrift collection, plus a small Digifender attribution and legal-contact link. The links appear before topic completion or profile account actions; displaying them does not record agreement or adopt the drafts.
+
+The production build, targeted lint and diff check passed. Local and live browser checks at 390px and 1440px found all five exact destinations on welcome, topics and profile without horizontal overflow. The live root returned 200 and anonymous `/api/sync` remained 401. Digifender's portfolio audit cleared ByteRush and reported 24 remaining gaps on Whumpo, the main Labthrift site and Plan.
+
+The company-maintained LabThrift drafts predate the guided-project release. [Product issue #1](https://github.com/zemdregon/tech-dose/issues/1) remains open for factual document review by the Digifender team before adoption. This UI release does not claim the drafts are complete or operative.
