@@ -30,7 +30,7 @@ export function ProjectView({project,active,onSkip,onNext}:{project:Project;acti
  const running=state.phase==='active';
  const sourceUnavailable=['https://labthrift.com/guides/immich','https://labthrift.com/guides/prism'].includes(project.sourceGuide);
  return <section aria-label={`Project: ${project.title}`} className="relative flex h-full snap-start flex-col bg-gradient-to-br from-indigo-950 via-slate-950 to-black p-5">
-  <div className="flex items-center justify-between text-xs text-sky-300"><span>GUIDED PROJECT</span><span>{state.completed?'Walkthrough finished':state.skipped?'Skipped':`${state.completedSteps.length} steps completed`}</span></div>
+  <div className="flex items-center justify-between text-xs text-sky-300"><span>GUIDED PROJECT</span><span>{state.completed?'Walkthrough finished':state.skipped?'Skipped':`${state.completedSteps.length} step${state.completedSteps.length === 1 ? "" : "s"} completed`}</span></div>
   <h2 ref={heading} tabIndex={-1} className="mt-3 shrink-0 text-xl font-extrabold outline-none">{project.title}</h2>
   <div ref={body} className="relative mt-4 min-h-0 flex-1 overflow-y-auto pr-1 pb-4">
    {!running ? <>
@@ -46,7 +46,7 @@ export function ProjectView({project,active,onSkip,onNext}:{project:Project;acti
     <p className="mb-3 text-xs text-white/45">Step {state.path.length} · {state.stepId.replaceAll('-',' ')}</p>
     {step.body.split('\n\n').map((text,i)=>text.startsWith('```')?<CodeBlock key={i} code={text.replace(/^```[^\n]*\n|```$/g,'').trim()}/>:<GlossaryText key={i} text={text} className="mb-4 whitespace-pre-line text-base leading-relaxed text-white/90"/>)}
     <div className="mt-4 flex flex-col gap-3">
-     {step.choices?.map(choice=><button key={choice.next} className={`${button} bg-white/5`} onClick={()=>act({type:'advance',next:choice.next})}>{choice.label}</button>)}
+     {step.choices?.map(choice=><button key={`${choice.next}:${choice.label}`} className={`${button} bg-white/5`} onClick={()=>act({type:'advance',next:choice.next})}>{choice.label}</button>)}
      {step.continue&&<button className={`${button} bg-sky-400 text-slate-950`} onClick={()=>act({type:'advance',next:step.continue!})}>Continue</button>}
      {step.end&&<><p className="text-sm text-white/60">Finishing records this walkthrough as read. Your gear only changes when you explicitly choose a gear status.</p><button className={`${button} bg-sky-400 text-slate-950`} onClick={()=>act({type:'finish'})}>Finish walkthrough</button></>}
     </div>
