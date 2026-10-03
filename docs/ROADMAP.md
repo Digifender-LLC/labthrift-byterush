@@ -54,7 +54,7 @@ Reconcile stale release-language and links across the 27 documents, READMEs, dep
 
 ### C01 Restore the two missing source guide destinations
 
-**Status:** Open. **Owner:** website editorial, with ByteRush integration review. **Dependency:** source-guide inventory in the merge receipt.
+**Status:** Partial. `/guides/immich` and its Markdown twin are written in [labthrift#4](https://github.com/zemdregon/labthrift/pull/4) and await deploy. `/guides/prism` awaits an editorial decision on which app it covers. **Owner:** website editorial, with ByteRush integration review. **Dependency:** source-guide inventory in the merge receipt.
 
 Resolve `/guides/immich` and `/guides/prism`, preserving the imported source URLs and provenance. Prefer substantive guides and matching Markdown twins at those destinations. If the editorial decision is to use another canonical guide or retain an unavailable guide, record that decision and explicitly revise the continuity requirement; do not silently count a 404 or a placeholder as complete.
 
@@ -148,7 +148,7 @@ Recommended path: adopt a conditional database write using the expected revision
 
 ### W01 Verify public serving and guide continuity
 
-**Status:** Partial; representative HTML/Markdown checks passed. **Owner:** website Worker and QA. **Dependency:** C01 for full source continuity.
+**Status:** Partial. The local request matrix passes (`npm test`, `npm run check` in [labthrift#4](https://github.com/zemdregon/labthrift/pull/4)), which fixed negotiated-Markdown HEAD length and the type of missing `/md` pages. The live run and C01 remain. **Owner:** website Worker and QA. **Dependency:** C01 for full source continuity.
 
 Test GET/HEAD for representative pages and all project source-guide URLs. Cover Markdown/HTML Accept preferences including q-values and ties, `Vary: Accept`, missing-twin fallback, Markdown HEAD body/length, direct `/md` routes, and unknown-page behavior. Compare available HTML/Markdown twins for materially consistent instructions.
 
@@ -156,7 +156,7 @@ Test GET/HEAD for representative pages and all project source-guide URLs. Cover 
 
 ### W02 Verify publication boundaries and discovery
 
-**Status:** Open verification. **Owner:** website publishing and QA. **Dependency:** D01 and C01 for final catalog/reference audit.
+**Status:** Partial. Locally, every private path returns 404, sitemap and llms targets resolve, discovery headers and media types pass, and ByteRush/Plan links are labelled with no Runs links ([labthrift#4](https://github.com/zemdregon/labthrift/pull/4)). The live run, the D01 wording pass and the final C01 audit remain. **Owner:** website publishing and QA. **Dependency:** D01 and C01 for final catalog/reference audit.
 
 Review the root asset directory and publishing exclusions. Verify docs, migrations, credentials, dependencies, and local runtime state cannot be served. Check cache/security/content headers, workers.dev noindex behavior, homepage Link headers, catalog media type, OpenAPI, llms text, robots, sitemap, and correct ByteRush/Plan destinations. Check responsive reading and honest product labels.
 
@@ -164,7 +164,7 @@ Review the root asset directory and publishing exclusions. Verify docs, migratio
 
 ### W03 Verify aggregate metrics and failure behavior
 
-**Status:** Open verification. **Owner:** website backend and QA. **Dependency:** local metrics fixtures.
+**Status:** Partial. Fixtures in [labthrift#4](https://github.com/zemdregon/labthrift/pull/4) cover bucketing, normalization, eligibility, bot heuristics and write failure, and the fix stops redirects being double counted. The design documents already call classification heuristic and keep platform logs separate. Deploy and a live read of the D1 table remain. **Owner:** website backend and QA. **Dependency:** local metrics fixtures.
 
 Test UTC-day/path/kind bucketing, normalization and length limits, eligible methods/statuses, asset/direct-Markdown exclusions, bot classification, and aggregate increments. Inject a metrics-write failure and confirm page serving succeeds. Review Worker logs separately from the D1 table's privacy properties.
 
@@ -176,7 +176,7 @@ Test UTC-day/path/kind bucketing, normalization and length limits, eligible meth
 
 **Status:** Open delivery support; automation is a recommended implementation choice. **Owner:** maintainers of all three repositories. **Dependency:** B03, P01–P04, W01–W03 as their checks become available.
 
-Keep commands alongside the code. ByteRush already has `npm test`, `npm run lint`, `npm run typecheck:worker`, `npm run build`, and `node tests/sync-integration.mjs` for a running local preview. The integration script's `--remote` option targets live ByteRush and must remain an explicit production test operation. Plan and the website need documented, repeatable checks for the contracts above; their package scripts currently do not expose test suites.
+Keep commands alongside the code. ByteRush already has `npm test`, `npm run lint`, `npm run typecheck:worker`, `npm run build`, and `node tests/sync-integration.mjs` for a running local preview. The integration script's `--remote` option targets live ByteRush and must remain an explicit production test operation. The website now has `npm test` and `npm run check [base-url]` ([labthrift#4](https://github.com/zemdregon/labthrift/pull/4)). Plan still needs documented, repeatable checks for the contracts above; its package scripts currently do not expose a test suite.
 
 **Done when:** a fresh checkout can run the documented local validation with disposable fixtures, missing prerequisites fail clearly, and meaningful checks can be run before release. CI is recommended but not required by the original documents; explicitly choose CI or a documented manual release gate. Do not embed production credentials or destructive retirement operations in ordinary tests.
 
