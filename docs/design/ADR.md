@@ -3,7 +3,7 @@
 > Baseline: 2026-10-03. Product: ByteRush. Repository: `zemdregon/tech-dose`. Source-grounded design baseline; deployment and acceptance evidence is tracked separately in [release status](release-status.md).
 
 ## ADR-B001 — Inline projects in the existing feed
-**Status:** accepted scope, implementation under verification. **Context:** Runs duplicates ByteRush learning. **Decision:** retain Feed/Topics/You and use All/Lessons/Projects within Feed. **Alternatives:** standalone Runs or a fourth main tab. **Consequences:** one learning surface; cards must support long content and explicit branching without swipe ambiguity. Revisit only if demonstrated usability problems require another navigation model.
+**Status:** accepted; implemented in `0e5c337` (presentation follow-up `dcebb16`) and deployed, with live evidence in the [release receipt](release-status.md#release-receipt--2026-10-03). Remaining physical-device checks are tracked in the [roadmap](../ROADMAP.md). **Context:** Runs duplicates ByteRush learning. **Decision:** retain Feed/Topics/You and use All/Lessons/Projects within Feed. **Alternatives:** standalone Runs or a fourth main tab. **Consequences:** one learning surface; cards must support long content and explicit branching without swipe ambiguity. Revisit only if demonstrated usability problems require another navigation model.
 
 ## ADR-B002 — Existing ByteRush snapshot and backend
 **Status:** accepted. **Decision:** extend `/api/sync` and `progress.data` v2; do not create a Runs service. **Alternatives:** dedicated tables/service per project, shared Plan storage. **Consequences:** fewer services, explicit merge/CAS/reset rules required, bounded catalog validation in both runtimes.
