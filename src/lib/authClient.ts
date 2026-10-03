@@ -3,7 +3,7 @@
 // Passkey (WebAuthn) flows for the browser, plus the sign-in sync handshake.
 // Sign-up and sign-in both end the same way: the local anonymous progress is
 // pushed to the server, merged with whatever the account already has, and the
-// merged result is applied locally — nothing is ever wiped.
+// merged result is applied locally. Switching accounts replaces account-owned state.
 
 import {
   browserSupportsWebAuthn,
@@ -19,7 +19,7 @@ import {
   verifyLogin,
   verifyRegistration,
 } from "./api";
-import { pullServerProgress, syncNow, useApp } from "./store";
+import { attachAccount, detachAccount, useApp } from "./store";
 import type { PublicUser } from "./syncTypes";
 
 export function passkeysSupported(): boolean {
@@ -35,9 +35,7 @@ export async function registerWithPasskey(username: string): Promise<PublicUser>
   // SimpleWebAuthn browser v11+ takes { optionsJSON }, not bare options.
   const response = await startRegistration({ optionsJSON: options });
   const { user } = await verifyRegistration(response);
-  useApp.getState().setUser(user);
-  useApp.getState().setProgressUserId(user.id);
-  await syncNow(); // imports this device's anonymous progress
+  await attachAccount(user);
   return user;
 }
 
@@ -46,27 +44,19 @@ export async function registerWithPasskey(username: string): Promise<PublicUser>
  * offers any discoverable passkey for this site.
  */
 export async function loginWithPasskey(username?: string): Promise<PublicUser> {
-  const priorOwner = useApp.getState().progressUserId;
   const { options } = await fetchLoginOptions(username?.trim() || undefined);
   const response = await startAuthentication({ optionsJSON: options });
   const { user } = await verifyLogin(response);
-  useApp.getState().setUser(user);
-  // Don't merge another account's local progress into this sign-in.
-  if (priorOwner && priorOwner !== user.id) {
-    await pullServerProgress();
-  } else {
-    await syncNow();
-  }
-  useApp.getState().setProgressUserId(user.id);
+  await attachAccount(user);
   return user;
 }
 
-/** Signs out server-side; progress stays on this device (anonymous mode). */
+/** Signs out and clears account-owned state before anonymous learning resumes. */
 export async function signOut(): Promise<void> {
   try {
     await apiLogout();
   } finally {
-    useApp.getState().setUser(null);
+    detachAccount();
   }
 }
 
@@ -103,9 +93,7 @@ export function bootstrapAuth(): void {
       const { user } = await fetchMe();
       const store = useApp.getState();
       if (user) {
-        store.setUser(user);
-        store.setProgressUserId(user.id);
-        await syncNow();
+        await attachAccount(user);
       } else if (store.user) {
         // Session expired or was revoked server-side.
         store.setUser(null);

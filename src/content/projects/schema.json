@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://labthrift.com/runs/schema.json",
+  "title": "LabthriftRun",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "summary",
+    "sourceGuide",
+    "startBeat",
+    "beats"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 280
+    },
+    "sourceGuide": {
+      "type": "string",
+      "format": "uri"
+    },
+    "startBeat": {
+      "type": "string",
+      "minLength": 1
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "recommendsIfInterested": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "recommendsIfInstalled": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "beats": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/beat"
+      }
+    }
+  },
+  "$defs": {
+    "statusSet": {
+      "type": "object",
+      "required": [
+        "itemId",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "itemId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "interested",
+            "installed",
+            "skipped"
+          ]
+        }
+      }
+    },
+    "beat": {
+      "type": "object",
+      "required": [
+        "id",
+        "body"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string",
+          "minLength": 1
+        },
+        "continue": {
+          "type": "string"
+        },
+        "choices": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "next"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "next": {
+                "type": "string",
+                "minLength": 1
+              },
+              "setsStatus": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/statusSet"
+                }
+              }
+            }
+          }
+        },
+        "setsStatus": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/statusSet"
+          }
+        },
+        "end": {
+          "type": "boolean"
+        },
+        "milestone": {
+          "type": "boolean",
+          "description": "Celebrate when this beat is shown (forward arrival)"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "continue"
+          ]
+        },
+        {
+          "required": [
+            "choices"
+          ]
+        },
+        {
+          "required": [
+            "end"
+          ],
+          "properties": {
+            "end": {
+              "const": true
+            }
+          }
+        }
+      ]
+    }
+  }
+}

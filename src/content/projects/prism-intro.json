@@ -1,0 +1,76 @@
+{
+  "id": "prism-intro",
+  "title": "Prism intro",
+  "summary": "Lighter photo library stub. Mark interested or installed when you try it.",
+  "sourceGuide": "https://labthrift.com/guides/prism",
+  "topics": [
+    "photos",
+    "prism"
+  ],
+  "recommendsIfInterested": [
+    "prism"
+  ],
+  "startBeat": "start",
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "Prism is the lighter photo path when Immich feels like too many containers. This run is a stub — enough to decide.",
+      "continue": "fit"
+    },
+    "fit": {
+      "id": "fit",
+      "body": "You want a browsable library on the lab box and phone upload later. You do not need face clustering on day one.",
+      "choices": [
+        {
+          "label": "Mark Prism interested",
+          "next": "interested",
+          "setsStatus": [
+            {
+              "itemId": "prism",
+              "status": "interested"
+            }
+          ]
+        },
+        {
+          "label": "I already run it — mark installed",
+          "next": "installed",
+          "setsStatus": [
+            {
+              "itemId": "prism",
+              "status": "installed"
+            },
+            {
+              "itemId": "photos",
+              "status": "installed"
+            }
+          ]
+        },
+        {
+          "label": "Skip",
+          "next": "skip",
+          "setsStatus": [
+            {
+              "itemId": "prism",
+              "status": "skipped"
+            }
+          ]
+        }
+      ]
+    },
+    "interested": {
+      "id": "interested",
+      "body": "Noted. Follow the Prism docs for your OS when you have an evening. Prefer LAN-only until you know the auth story.",
+      "end": true
+    },
+    "installed": {
+      "id": "installed",
+      "body": "Good. Keep a second copy of the library off the box — same rule as any photo pile.",
+      "end": true
+    },
+    "skip": {
+      "id": "skip",
+      "body": "Fine. Immich or plain folder backup still cover most houses.",
+      "end": true
+    }
+  }
+}

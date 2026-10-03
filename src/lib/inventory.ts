@@ -87,6 +87,15 @@ export const INVENTORY_ITEMS: InventoryItem[] = [
     question: "Do you own a domain name?",
     blurb: "Unlocks real HTTPS and pretty URLs for your services.",
   },
+  {"id": "photos", "name": "Photo backups", "emoji": "📷", "question": "Do you keep a separate backup of your photos?", "blurb": "A library and a backup are different things."},
+  {"id": "immich", "name": "Immich", "emoji": "🌅", "question": "Do you run Immich?", "blurb": "A photo library you can host yourself."},
+  {"id": "prism", "name": "Prism", "emoji": "🔷", "question": "Are you trying Prism for your photos?", "blurb": "An alternative photo project to explore."},
+  {"id": "nextcloud", "name": "Nextcloud", "emoji": "☁️", "question": "Do you use Nextcloud?", "blurb": "Files and collaboration on your own server."},
+  {"id": "frigate", "name": "Frigate", "emoji": "📹", "question": "Do you run Frigate?", "blurb": "Local camera recording and detection."},
+  {"id": "homeassistant", "name": "Home Assistant", "emoji": "🏠", "question": "Do you use Home Assistant?", "blurb": "Home automation on your own hardware."},
+  {"id": "jellyfin", "name": "Jellyfin", "emoji": "🎞️", "question": "Do you use Jellyfin?", "blurb": "Stream your own media library."},
+  {"id": "plex", "name": "Plex", "emoji": "🎬", "question": "Do you use Plex?", "blurb": "Organize and stream your media."},
+  {"id": "paperless", "name": "Paperless", "emoji": "📄", "question": "Do you use Paperless?", "blurb": "Searchable document storage at home."},
 ];
 
 export const inventoryItemById = (id: string): InventoryItem | undefined =>

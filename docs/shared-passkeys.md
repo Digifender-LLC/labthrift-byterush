@@ -80,4 +80,4 @@ field anywhere in the schema (see `migrations/0001_init.sql`):
 
 Anonymous use remains fully supported: without an account everything lives in
 `localStorage`, and on first sign-in that local progress is merged into the
-account (never wiped).
+account. Switching to a different account replaces account-owned local learning state; signing out clears it before anonymous learning resumes. No Runs accounts or passkeys are imported.

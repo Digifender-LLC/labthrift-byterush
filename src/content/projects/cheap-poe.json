@@ -1,0 +1,56 @@
+{
+  "id": "cheap-poe",
+  "title": "Power two Wi-Fi points from one small switch",
+  "summary": "Count watts and ports. TL-SG1005P is the default two-AP brick. No brand stack on day one.",
+  "sourceGuide": "https://labthrift.com/guides/cheap-poe",
+  "startBeat": "start",
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "Some Wi-Fi access points take power from the ethernet cable. That is PoE. Count the watts and the ports. You don't need a whole brand stack on day one.",
+      "choices": [
+        {
+          "label": "Two APs (or AP + camera), no VLANs",
+          "next": "default"
+        },
+        {
+          "label": "Camera number three is coming",
+          "next": "eight"
+        },
+        {
+          "label": "I already live in UniFi",
+          "next": "unifi"
+        },
+        {
+          "label": "Whole-house cameras, not first apartment",
+          "next": "sixteen"
+        }
+      ]
+    },
+    "default": {
+      "id": "default",
+      "body": "TP-Link TL-SG1005P: 5 ports, 4× PoE+, 65W total, fanless, unmanaged. Maker page lists 65W / 30W per port. Add AP draw (often 10–20W) before you celebrate.",
+      "continue": "aps"
+    },
+    "eight": {
+      "id": "eight",
+      "body": "An 8-port budget PoE (LS108GP or similar): more ports, still cheap. Read the watt budget, not the port count.",
+      "continue": "aps"
+    },
+    "unifi": {
+      "id": "unifi",
+      "body": "UniFi Switch Lite 8 PoE: 4× PoE+, 52W, fanless, managed. About $109. Stay UniFi if you're already there — 52W is easy to outgrow.",
+      "continue": "aps"
+    },
+    "sixteen": {
+      "id": "sixteen",
+      "body": "TP-Link TL-SG1016PE: 16 ports, 8 PoE+, ~150W, smart managed. A house with cameras — not a first apartment AP pair.",
+      "continue": "aps"
+    },
+    "aps": {
+      "id": "aps",
+      "body": "Ceiling or high-shelf, wired backhaul, one per floor. A $40 mesh satellite hopping on Wi-Fi is not an AP. Two APs plus two cheap cameras will surprise a 52W budget.",
+      "end": true
+    }
+  }
+}

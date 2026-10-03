@@ -1,0 +1,66 @@
+{
+  "id": "when-house-disk-full",
+  "title": "When the computer's disk is full",
+  "summary": "Confirm it's the computer (not the backup stick), free room or move the house folder, then retry.",
+  "sourceGuide": "https://labthrift.com/guides/when-house-disk-full",
+  "startBeat": "start",
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "Photos won't copy, the share says no space, or df shows the system disk packed. Don't buy a NAS because one small SSD filled up.",
+      "continue": "df"
+    },
+    "df": {
+      "id": "df",
+      "body": "SSH in. Run df -h. Point at the line that ends in /. 95–100% Use% (or tiny Avail) means the computer itself is the problem. House folder already on a stay-in USB? Also: df -h /srv/share.",
+      "choices": [
+        {
+          "label": "/ is full (or nearly)",
+          "next": "full-root"
+        },
+        {
+          "label": "Bytes free but copies still fail",
+          "next": "inodes"
+        },
+        {
+          "label": "Only the backup stick is full",
+          "next": "backup-stick"
+        }
+      ]
+    },
+    "inodes": {
+      "id": "inodes",
+      "body": "Check file slots: df -i /. If IUse% is near 100%, you ran out of inodes (lots of tiny files), not gigabytes. Fix that before buying a bigger drive.",
+      "end": true
+    },
+    "backup-stick": {
+      "id": "backup-stick",
+      "body": "Wrong page for a /mnt/backup stick you unplug. Free or replace that stick — don't wipe the live share to make the backup fit.",
+      "end": true
+    },
+    "full-root": {
+      "id": "full-root",
+      "body": "See what's eating space: sudo du -sh /srv/share and sudo du -h --max-depth=1 / 2>/dev/null | sort -h. Clear apt leftovers and old logs if that's the bulk. Don't delete /srv/share without a trusted second copy.",
+      "choices": [
+        {
+          "label": "Junk/logs are the bulk",
+          "next": "clear"
+        },
+        {
+          "label": "House folder is huge; SSD is small",
+          "next": "usb-park"
+        }
+      ]
+    },
+    "clear": {
+      "id": "clear",
+      "body": "Clear old package downloads and old logs. Empty Trash/Downloads you don't need. Re-check df -h /. Leave headroom so next week's photos don't fail.",
+      "end": true
+    },
+    "usb-park": {
+      "id": "usb-park",
+      "body": "Park the live share on a USB disk that stays plugged in. Same share name for phones and laptops. Keep a second copy elsewhere first.",
+      "end": true
+    }
+  }
+}

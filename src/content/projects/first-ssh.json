@@ -1,0 +1,153 @@
+{
+  "id": "first-ssh",
+  "title": "SSH from the couch",
+  "summary": "Type commands on the old PC from your laptop on the house network. Don't open port 22 to the internet.",
+  "sourceGuide": "https://labthrift.com/guides/first-ssh",
+  "startBeat": "start",
+  "topics": [
+    "beginner",
+    "ssh"
+  ],
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "SSH is a way to type commands on the lab computer from your normal one, over the house network.\n\nSame idea as sitting at its keyboard — minus the closet trip.",
+      "continue": "gloss"
+    },
+    "gloss": {
+      "id": "gloss",
+      "body": "Plain words:\n\n• SSH = Secure Shell — encrypted remote typing\n• Host = the lab computer\n• Host key = the lab's ID fingerprint; you accept it once\n• Port 22 = the door SSH usually listens on (keep it inside the house)\n\nYou will not open that door to the public internet today.",
+      "milestone": true,
+      "continue": "where"
+    },
+    "where": {
+      "id": "where",
+      "body": "Where to type the command:\n\n• Windows: Terminal or PowerShell (built-in on recent Windows)\n• Mac: Terminal (Spotlight → Terminal)\n• Linux: Terminal\n\nSame command everywhere.",
+      "continue": "address-recap"
+    },
+    "cmd": {
+      "id": "cmd",
+      "body": "Type:\n\n```\nssh you@that-address\n```\n\nExamples:\nssh ender@192.168.1.50\nssh labuser@lab.local\n\nUse the username from install and the address from hostname -I or the router list.",
+      "continue": "trust"
+    },
+    "trust": {
+      "id": "trust",
+      "body": "First time it says the authenticity of host can't be established — that's the host key.\n\nType yes and Enter. Then type the password. Nothing appears as you type; that's normal. Press Enter.\n\nWhat success looks like: a prompt like you@lab:~$ ready for commands.",
+      "milestone": true,
+      "choices": [
+        {
+          "label": "It worked",
+          "next": "ok"
+        },
+        {
+          "label": "Connection refused / timed out",
+          "next": "refused"
+        },
+        {
+          "label": "Permission denied",
+          "next": "denied"
+        }
+      ]
+    },
+    "ok": {
+      "id": "ok",
+      "body": "Good. Try:\n\nhostname\nuptime\nexit\n\nexit leaves SSH and returns you to your laptop.",
+      "continue": "prompt"
+    },
+    "house-only": {
+      "id": "house-only",
+      "body": "Keep SSH on the house network only.\n\nDon't forward port 22 on the router. Don't put the lab on the public internet for \"easy access.\" Later you can use a VPN if you need away-from-home access.",
+      "continue": "keys-later"
+    },
+    "keys-later": {
+      "id": "keys-later",
+      "body": "When password login has been boring for a week, put an SSH key on the laptop (a file that proves it's you — no password each time).\n\nSkip fail2ban, changing the port, and hardening guides on day one.",
+      "continue": "key-preview"
+    },
+    "refused": {
+      "id": "refused",
+      "body": "Connection refused or timed out usually means: computer off, wrong address, or SSH software not installed.\n\nConfirm the address. Same Wi‑Fi (not guest). Ping if you know how — optional.",
+      "continue": "guest-wifi"
+    },
+    "refused-fix": {
+      "id": "refused-fix",
+      "body": "With a screen on the lab box:\n\n```\nsudo apt install openssh-server\n```\n\nThen check it's running:\nsudo systemctl status ssh\n\nIf a firewall (ufw) is on:\nsudo ufw allow OpenSSH\nsudo ufw status",
+      "continue": "refused-retry"
+    },
+    "refused-retry": {
+      "id": "refused-retry",
+      "body": "Try ssh again from the laptop.\n\nStill stuck? Reboot the lab once. Verify hostname -I didn't change. Temporarily connect with a cable if you're on flaky Wi‑Fi.",
+      "choices": [
+        {
+          "label": "It works now",
+          "next": "ok"
+        },
+        {
+          "label": "Still broken",
+          "next": "stuck-deep"
+        }
+      ]
+    },
+    "denied": {
+      "id": "denied",
+      "body": "Permission denied = wrong user or password.\n\nUse the user you created at install — not Administrator, not root (unless you set a root password on purpose), not pi unless you named it pi.",
+      "continue": "denied-tips"
+    },
+    "denied-tips": {
+      "id": "denied-tips",
+      "body": "Tips:\n\n• Capslock off\n• Try the password at the physical keyboard login first\n• Username is case-sensitive\n• If you locked yourself out, use the screen + keyboard on the lab to reset — don't expose SSH to the internet to \"fix\" it",
+      "choices": [
+        {
+          "label": "Logged in now",
+          "next": "ok"
+        },
+        {
+          "label": "Still denied",
+          "next": "stuck-deep"
+        }
+      ]
+    },
+    "stuck-deep": {
+      "id": "stuck-deep",
+      "body": "If you're still stuck:\n\n1. Sit at the lab with a screen\n2. Confirm you can log in locally\n3. Confirm openssh-server is installed\n4. From the lab, note hostname -I again\n5. From the laptop, ssh to that exact number\n\nPause rather than opening ports on the router.",
+      "continue": "wrap"
+    },
+    "wrap": {
+      "id": "wrap",
+      "body": "SSH from the couch is the everyday habit.\n\nThe next guided projects build on a box you can reach without walking to the closet.",
+      "continue": "no-portforward"
+    },
+    "end": {
+      "id": "end",
+      "body": "You have reached the end of this walkthrough: SSH is demystified, house-only, and troubleshooting paths are mapped.\n\nDon't forward port 22.",
+      "milestone": true,
+      "end": true
+    },
+    "address-recap": {
+      "id": "address-recap",
+      "body": "Need the address again?\n\nOn the lab (with screen): hostname -I\n\nYou'll see one or more numbers. Prefer the one starting with 192.168. or 10. — those are house-network addresses.",
+      "continue": "cmd"
+    },
+    "prompt": {
+      "id": "prompt",
+      "body": "After login, the prompt often looks like:\n\n```\nusername@hostname:~$\n```\n\n~ means your home folder. $ means a normal user (not root). Type commands here; they run on the lab, not on your laptop.",
+      "continue": "house-only"
+    },
+    "guest-wifi": {
+      "id": "guest-wifi",
+      "body": "Guest Wi‑Fi and \"AP isolation\" often block laptop↔lab traffic.\n\nPut both devices on the main house network. Or use ethernet for the lab.",
+      "continue": "refused-fix"
+    },
+    "key-preview": {
+      "id": "key-preview",
+      "body": "SSH keys (later): your laptop holds a private key; the lab stores the matching public key.\n\nThen ssh works without typing a password. Learn it after password SSH is boring and reliable.",
+      "continue": "wrap"
+    },
+    "no-portforward": {
+      "id": "no-portforward",
+      "body": "Router screens sometimes show \"port forwarding\" or \"virtual server.\"\n\nDo not forward 22 to the lab. That publishes SSH to the whole internet. House network only.",
+      "milestone": true,
+      "continue": "end"
+    }
+  }
+}

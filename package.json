@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && node scripts/cache-assets.mjs",
     "start": "next start",
     "lint": "eslint",
     "cf:preview": "wrangler dev",
@@ -13,7 +13,8 @@
     "d1:migrate": "wrangler d1 migrations apply DB --remote",
     "d1:migrate:local": "wrangler d1 migrations apply DB --local",
     "typecheck:worker": "tsc -p worker/tsconfig.json",
-    "icons:generate": "node scripts/generate-pwa-icons.mjs"
+    "icons:generate": "node scripts/generate-pwa-icons.mjs",
+    "test": "node scripts/validate-runs-source.mjs && node scripts/test.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.23",
@@ -45,6 +46,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "esbuild": "^0.28.1",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
     "sharp": "^0.35.4",

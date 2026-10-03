@@ -1,0 +1,48 @@
+{
+  "id": "add-local-dns-name",
+  "title": "Add a local name in Pi-hole",
+  "summary": "lab.home instead of 192.168.x.x — only after Pi-hole is already house DNS.",
+  "sourceGuide": "https://labthrift.com/guides/add-local-dns-name",
+  "startBeat": "start",
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "Pi-hole can answer a name you invent with the computer's house address. It only works for devices that already use Pi-hole as DNS. Not a public domain. Not a mesh kit.",
+      "choices": [
+        {
+          "label": "Phones already get ads blocked via Pi-hole",
+          "next": "lock"
+        },
+        {
+          "label": "Pi-hole isn't house DNS yet",
+          "next": "not-ready"
+        }
+      ]
+    },
+    "not-ready": {
+      "id": "not-ready",
+      "body": "Skip until a phone on house Wi-Fi already has ads gone. Point the router at Pi-hole first. A local name won't reach phones still using ISP DNS.",
+      "end": true
+    },
+    "lock": {
+      "id": "lock",
+      "body": "Step 1: lock the number. hostname -I, then reserve that address on the router. A local name pointed at a moving number is how SSH and the share “break” after a reboot.",
+      "continue": "name"
+    },
+    "name": {
+      "id": "name",
+      "body": "Step 2: pick a short name — lab.home, lab.lan, office.home. Prefer .home or .lan. Skip .local. Skip a real public site name.",
+      "continue": "add"
+    },
+    "add": {
+      "id": "add",
+      "body": "Step 3: open http://pi.hole/admin → Local DNS. Domain: lab.home. IP: the reserved address. Add. Leave CNAME alone.",
+      "continue": "prove"
+    },
+    "prove": {
+      "id": "prove",
+      "body": "Step 4: ping -c 3 lab.home or dig +short lab.home. Then ssh youruser@lab.home, smb://lab.home/photos, http://lab.home/admin. Wrong IP? Delete the row and add again.",
+      "end": true
+    }
+  }
+}

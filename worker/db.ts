@@ -1,4 +1,4 @@
-import type { InventoryStatus, ProgressPayload } from "../src/lib/syncTypes";
+import { EMPTY_PROGRESS, normalizeProgress, type ProgressPayload, type NormalizedProgress } from "../src/lib/syncTypes";
 
 export interface UserRow {
   id: string;
@@ -173,57 +173,36 @@ export async function getProgress(
   }
 }
 
-export async function putProgress(
-  db: D1Database,
-  userId: string,
-  payload: ProgressPayload
-): Promise<void> {
-  await db
-    .prepare(
-      `INSERT INTO progress (user_id, data, updated_at) VALUES (?1, ?2, ?3)
-       ON CONFLICT (user_id) DO UPDATE SET data = ?2, updated_at = ?3`
-    )
-    .bind(userId, JSON.stringify(payload), Date.now())
-    .run();
-}
-
-/**
- * Mirrors the quiz answers and inventory from the payload into structured
- * tables so they can be queried directly (analytics, future tailoring).
- * Quiz rows keep the first recorded attempt; inventory rows track the latest.
- */
-export async function mirrorStructuredRows(
-  db: D1Database,
-  userId: string,
-  payload: ProgressPayload
-): Promise<void> {
-  const now = Date.now();
-  const statements: D1PreparedStatement[] = [];
-
-  for (const [questionId, a] of Object.entries(payload.quizAnswers)) {
-    statements.push(
-      db
-        .prepare(
-          `INSERT INTO quiz_answers
-             (user_id, question_id, lesson_id, choice_index, correct, answered_at)
-           VALUES (?1, ?2, ?3, ?4, ?5, ?6)
-           ON CONFLICT (user_id, question_id) DO NOTHING`
-        )
-        .bind(userId, questionId, a.lessonId, a.choice, a.correct ? 1 : 0, now)
-    );
+/** Optimistic CAS: snapshot and structured mirrors commit in one D1 batch.
+ * A failed CAS gates every mirror statement, then retries from the latest row. */
+export async function updateProgress(db: D1Database, userId: string,
+  update: (stored: NormalizedProgress) => NormalizedProgress): Promise<NormalizedProgress> {
+  for (let attempt = 0; attempt < 8; attempt++) {
+    const row = await db.prepare("SELECT data, updated_at FROM progress WHERE user_id = ?1")
+      .bind(userId).first<{ data: string; updated_at: number }>();
+    const current = normalizeProgress(row ? JSON.parse(row.data) : EMPTY_PROGRESS);
+    const next = update(current);
+    const revision = Math.max(Date.now(), (row?.updated_at ?? 0) + 1);
+    const encoded = JSON.stringify(next);
+    const write = row
+      ? db.prepare("UPDATE progress SET data = ?2, updated_at = ?3 WHERE user_id = ?1 AND updated_at = ?4").bind(userId, encoded, revision, row.updated_at)
+      : db.prepare("INSERT INTO progress (user_id, data, updated_at) VALUES (?1, ?2, ?3) ON CONFLICT DO NOTHING").bind(userId, encoded, revision);
+    // Exact data + revision gates avoid another writer with the same millisecond
+    // updating the mirrors for a snapshot that lost the CAS.
+    const gate = "EXISTS (SELECT 1 FROM progress WHERE user_id = ?1 AND updated_at = ?2 AND data = ?3)";
+    const statements = [write,
+      db.prepare(`DELETE FROM quiz_answers WHERE user_id = ?1 AND ${gate}`).bind(userId, revision, encoded),
+      db.prepare(`DELETE FROM inventory WHERE user_id = ?1 AND ${gate}`).bind(userId, revision, encoded),
+    ];
+    for (const [id, a] of Object.entries(next.quizAnswers)) statements.push(
+      db.prepare(`INSERT OR IGNORE INTO quiz_answers (user_id, question_id, lesson_id, choice_index, correct, answered_at)
+        SELECT ?1, ?4, ?5, ?6, ?7, ?2 WHERE ${gate}`)
+      .bind(userId, revision, encoded, id, a.lessonId, a.choice, a.correct ? 1 : 0));
+    for (const [id, status] of Object.entries(next.inventory)) statements.push(
+      db.prepare(`INSERT OR REPLACE INTO inventory (user_id, item_id, status, updated_at)
+        SELECT ?1, ?4, ?5, ?2 WHERE ${gate}`).bind(userId, revision, encoded, id, status));
+    const result = await db.batch(statements);
+    if (result[0].meta.changes === 1) return next;
   }
-
-  for (const [itemId, status] of Object.entries(payload.inventory)) {
-    statements.push(
-      db
-        .prepare(
-          `INSERT INTO inventory (user_id, item_id, status, updated_at)
-           VALUES (?1, ?2, ?3, ?4)
-           ON CONFLICT (user_id, item_id) DO UPDATE SET status = ?3, updated_at = ?4`
-        )
-        .bind(userId, itemId, status satisfies InventoryStatus, now)
-    );
-  }
-
-  if (statements.length > 0) await db.batch(statements);
+  throw new Error("Progress changed concurrently; retry sync.");
 }

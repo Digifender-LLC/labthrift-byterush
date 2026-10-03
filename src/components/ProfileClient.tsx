@@ -43,6 +43,7 @@ import { cn } from "@/lib/utils";
 export function ProfileClient() {
   const mounted = useMounted();
   const xp = useApp((s) => s.xp);
+  const projects = useApp((s) => s.projects);
   const cardsRead = useApp((s) => s.cardsRead);
   const completedLessons = useApp((s) => s.completedLessons);
   const streak = useApp((s) => s.streak);
@@ -96,8 +97,8 @@ export function ProfileClient() {
               {doneToday
                 ? "Streak safe for today. See you tomorrow."
                 : liveStreak > 0
-                  ? "Finish a lesson today to keep it alive!"
-                  : "Finish a lesson to light the flame."}
+                  ? "Complete a lesson or a new project step today."
+                  : "Complete a lesson or a new project step to begin."}
             </p>
             <p className="mt-1 text-[11px] font-semibold text-amber-400/90">
               Best: {bestStreak} day{bestStreak !== 1 && "s"}
@@ -174,6 +175,11 @@ export function ProfileClient() {
           </motion.div>
         </div>
 
+        <div className="mt-3 rounded-2xl border border-border bg-card p-4">
+          <p className="text-lg font-bold">{Object.values(projects).filter(p => p.completed).length} / 17 projects finished</p>
+          <p className="text-sm text-muted-foreground">{Object.values(projects).reduce((sum, p) => sum + p.completedSteps.length, 0)} unique project steps completed</p>
+          <p className="mt-2 text-xs text-muted-foreground">Walkthrough progress is separate from lesson and quiz statistics.</p>
+        </div>
         {/* achievements */}
         <h2 className="mt-6 text-lg font-extrabold">
           Achievements{" "}
@@ -244,7 +250,7 @@ export function ProfileClient() {
           <DialogHeader>
             <DialogTitle>Reset everything?</DialogTitle>
             <DialogDescription>
-              Your XP, streak, achievements, quiz answers and completed lessons
+              Your XP, streak, achievements, quiz answers, completed lessons, projects and project rewards
               will be wiped
               {user
                 ? " — on this device and on your synced account"

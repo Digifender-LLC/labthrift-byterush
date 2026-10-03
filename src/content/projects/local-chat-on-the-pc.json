@@ -1,0 +1,48 @@
+{
+  "id": "local-chat-on-the-pc",
+  "title": "Run a local chat on the old PC",
+  "summary": "Ollama + a small model over SSH. Stays on the house network. Don't buy a GPU this weekend.",
+  "sourceGuide": "https://labthrift.com/guides/local-chat-on-the-pc",
+  "startBeat": "start",
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "Install Ollama on the old PC, pull a small model, chat from SSH. Answers stay on the house network. CPU is fine for a first try.",
+      "continue": "check"
+    },
+    "check": {
+      "id": "check",
+      "body": "Check RAM and disk first: free -h and df -h ~. Aim for ~8 GB RAM for a small 1B–3B model and a few free GB on disk. 4 GB boxes can try the 1B tag, slowly.",
+      "choices": [
+        {
+          "label": "Enough RAM / disk — install",
+          "next": "install"
+        },
+        {
+          "label": "Disk full of photos",
+          "next": "disk"
+        }
+      ]
+    },
+    "disk": {
+      "id": "disk",
+      "body": "Park the share on a USB that stays plugged in first. Free room, then come back to install Ollama.",
+      "end": true
+    },
+    "install": {
+      "id": "install",
+      "body": "Official install: curl -fsSL https://ollama.com/install.sh | sh — or download, less it, then bash. Check: ollama -v and systemctl is-active ollama.",
+      "continue": "pull"
+    },
+    "pull": {
+      "id": "pull",
+      "body": "Start tiny: ollama pull llama3.2:1b. About 8 GB free and patience? ollama pull llama3.2 (3B). List with ollama list.",
+      "continue": "chat"
+    },
+    "chat": {
+      "id": "chat",
+      "body": "ollama run llama3.2:1b — type a short question, wait (CPU is slow on first load), /bye to leave. Keep port 11434 off the open internet. Skip Open WebUI and GPUs tonight.",
+      "end": true
+    }
+  }
+}

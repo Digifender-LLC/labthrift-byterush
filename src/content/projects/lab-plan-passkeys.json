@@ -1,0 +1,48 @@
+{
+  "id": "lab-plan-passkeys",
+  "title": "Keep a lab plan with a passkey, not an email",
+  "summary": "Optional checklist at plan.labthrift.com. Username + passkey. No email recovery. Export before you wipe a phone.",
+  "sourceGuide": "https://labthrift.com/guides/lab-plan-passkeys",
+  "startBeat": "start",
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "Lab plan is an optional checklist for what you already have and where the first weekend sits. Prefer paper or a text file? Skip the app.",
+      "choices": [
+        {
+          "label": "I want the optional plan app",
+          "next": "what"
+        },
+        {
+          "label": "Notebook already works — skip",
+          "next": "skip"
+        }
+      ]
+    },
+    "skip": {
+      "id": "skip",
+      "body": "Fine. Static notes on labthrift.com stand alone. House jobs still live on the house network.",
+      "end": true
+    },
+    "what": {
+      "id": "what",
+      "body": "Private workspace at plan.labthrift.com: list gear, tick weekend steps, sketch a closet, keep house names. Export anytime. Delete the account and the rows go with it. No accounts on the main site.",
+      "continue": "passkey"
+    },
+    "passkey": {
+      "id": "passkey",
+      "body": "Pick a username — a handle, not an email. Sign in with a passkey (Face ID, fingerprint, or device unlock). No password. No phone number. No Google or Apple login.",
+      "continue": "recovery"
+    },
+    "recovery": {
+      "id": "recovery",
+      "body": "No email recovery on purpose. No inbox means nobody resets you by guessing an address. Tradeoff: if every passkey is gone, the plan is gone. Export before you wipe a phone.",
+      "continue": "second"
+    },
+    "second": {
+      "id": "second",
+      "body": "While signed in, add a second passkey on another device. Phone plus laptop is enough. Do this before you retire a phone, not after.",
+      "end": true
+    }
+  }
+}

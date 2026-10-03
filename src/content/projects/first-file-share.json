@@ -1,0 +1,57 @@
+{
+  "id": "first-file-share",
+  "title": "A file share",
+  "summary": "A folder on the old PC that phones and laptops can open. Samba. No NAS required.",
+  "sourceGuide": "https://labthrift.com/guides/first-file-share",
+  "startBeat": "start",
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "A file share is a folder phones and laptops open like a USB drive on the network. You don't buy a Synology for a folder of photos. SSH in first.",
+      "continue": "folder"
+    },
+    "folder": {
+      "id": "folder",
+      "body": "Make a folder: sudo mkdir -p /srv/share. Keep it simple. One share, named something obvious like photos or house.",
+      "continue": "samba"
+    },
+    "samba": {
+      "id": "samba",
+      "body": "Install: sudo apt install samba. In /etc/samba/smb.conf add a [photos] block with path = /srv/share, browsable = yes, read only = no, valid users = youruser. Then: sudo smbpasswd -a youruser && sudo systemctl restart smbd.",
+      "continue": "open"
+    },
+    "open": {
+      "id": "open",
+      "body": "Windows: \\\\lab-address\\photos. Mac: smb://lab-address/photos. Phone: Files / My Files with the same address and share password.",
+      "choices": [
+        {
+          "label": "It opens and I can write",
+          "next": "done"
+        },
+        {
+          "label": "I can see it but can't write",
+          "next": "chown"
+        },
+        {
+          "label": "Share is invisible",
+          "next": "ufw"
+        }
+      ]
+    },
+    "done": {
+      "id": "done",
+      "body": "Leave it. Use the folder. Don't expose Samba to the internet. A backup of this folder is the next job when you're ready.",
+      "end": true
+    },
+    "chown": {
+      "id": "chown",
+      "body": "Linux folder owner is usually the culprit. Run: sudo chown youruser:youruser /srv/share — then try again.",
+      "end": true
+    },
+    "ufw": {
+      "id": "ufw",
+      "body": "If ufw is on: sudo ufw allow Samba. Confirm with sudo ufw status. Still house network only.",
+      "end": true
+    }
+  }
+}

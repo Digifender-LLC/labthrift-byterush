@@ -1,0 +1,95 @@
+export type ProgressHint = { run_id: string; done: number | boolean };
+
+/** Score runs for the recommended feed. Higher is better; done runs demoted. */
+export function recommendRunIds(
+  stack: { item_id: string; status: string }[],
+  progress: ProgressHint[]
+): string[] {
+  const interested = new Set(
+    stack.filter((s) => s.status === "interested").map((s) => s.item_id)
+  );
+  const installed = new Set(
+    stack.filter((s) => s.status === "installed").map((s) => s.item_id)
+  );
+  const done = new Set(
+    progress.filter((p) => !!p.done).map((p) => p.run_id)
+  );
+  const started = new Set(progress.map((p) => p.run_id));
+
+  const scored = RUNS.map((run, index) => {
+    let score = 0;
+    for (const id of run.recommendsIfInterested || []) {
+      if (interested.has(id)) score += 10;
+      if (installed.has(id)) score += 4;
+    }
+    for (const id of run.recommendsIfInstalled || []) {
+      if (installed.has(id)) score += 12;
+      if (interested.has(id)) score += 3;
+    }
+    const topics = new Set(run.topics || []);
+    for (const item of STACK_ITEMS) {
+      if (!interested.has(item.id) && !installed.has(item.id)) continue;
+      for (const t of item.topics || []) {
+        if (topics.has(t)) score += 1;
+      }
+    }
+    if (done.has(run.id)) score -= 50;
+    else if (started.has(run.id)) score -= 5;
+    if (
+      interested.size + installed.size === 0 &&
+      ((run.recommendsIfInterested || []).length ||
+        (run.recommendsIfInstalled || []).length)
+    ) {
+      score += 1;
+    }
+    return { id: run.id, score, index };
+  });
+
+  scored.sort((a, b) => b.score - a.score || a.index - b.index);
+  return scored.map((s) => s.id);
+}
+
+/**
+ * Runs that should be appended to a user's learning plan given stack tags.
+ * Skips runs already on the plan or already completed in progress.
+ */
+export function recommendPlanAdditions(
+  stack: { item_id: string; status: string }[],
+  existingPlanRunIds: Set<string>,
+  doneRunIds: Set<string>
+): string[] {
+  const interested = new Set(
+    stack.filter((s) => s.status === "interested").map((s) => s.item_id)
+  );
+  const installed = new Set(
+    stack.filter((s) => s.status === "installed").map((s) => s.item_id)
+  );
+
+  const out: string[] = [];
+  const seen = new Set<string>();
+
+  for (const run of RUNS) {
+    if (existingPlanRunIds.has(run.id) || doneRunIds.has(run.id) || seen.has(run.id)) {
+      continue;
+    }
+    let match = false;
+    for (const id of run.recommendsIfInterested || []) {
+      if (interested.has(id)) {
+        match = true;
+        break;
+      }
+    }
+    if (!match) {
+      for (const id of run.recommendsIfInstalled || []) {
+        if (installed.has(id)) {
+          match = true;
+          break;
+        }
+      }
+    }
+    if (!match) continue;
+    seen.add(run.id);
+    out.push(run.id);
+  }
+  return out;
+}

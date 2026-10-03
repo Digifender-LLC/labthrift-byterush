@@ -33,7 +33,7 @@
 	],
 
 	// WebAuthn Relying Party config. RP ID is the registrable parent domain
-	// so passkeys can be shared across plan./beta./app.labthrift.com — see
+	// to permit future account federation across plan./app.labthrift.com — see
 	// docs/shared-passkeys.md. The workers.dev preview cannot run real
 	// ceremonies with this RP ID (origin/RP mismatch); use `wrangler dev`
 	// with .dev.vars for local testing instead.

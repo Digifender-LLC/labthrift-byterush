@@ -1,0 +1,62 @@
+[
+  {
+    "id": "photos",
+    "label": "Photo backup",
+    "blurb": "A second home for phone and camera shots — not just the share folder.",
+    "topics": ["photos", "backup"]
+  },
+  {
+    "id": "immich",
+    "label": "Immich",
+    "blurb": "Self-hosted Google Photos vibe. Mobile upload, albums, face search.",
+    "topics": ["photos", "docker", "media"]
+  },
+  {
+    "id": "prism",
+    "label": "Prism",
+    "blurb": "Lighter photo library path when Immich feels heavy.",
+    "topics": ["photos", "media"]
+  },
+  {
+    "id": "nextcloud",
+    "label": "Nextcloud",
+    "blurb": "Files, calendar, and sync clients for the house.",
+    "topics": ["files", "sync"]
+  },
+  {
+    "id": "pihole",
+    "label": "Pi-hole",
+    "blurb": "DNS sinkhole for ads on the house network.",
+    "topics": ["dns", "network"]
+  },
+  {
+    "id": "frigate",
+    "label": "Frigate",
+    "blurb": "Local NVR with object detection for cheap cams.",
+    "topics": ["cameras", "nvr"]
+  },
+  {
+    "id": "homeassistant",
+    "label": "Home Assistant",
+    "blurb": "Hub for lights, sensors, and automations you own.",
+    "topics": ["home", "iot"]
+  },
+  {
+    "id": "jellyfin",
+    "label": "Jellyfin",
+    "blurb": "Stream the media library without a subscription.",
+    "topics": ["media", "streaming"]
+  },
+  {
+    "id": "plex",
+    "label": "Plex",
+    "blurb": "The other media server — nicer clients, more cloud glue.",
+    "topics": ["media", "streaming"]
+  },
+  {
+    "id": "paperless",
+    "label": "Paperless",
+    "blurb": "Scan, OCR, and find household paperwork.",
+    "topics": ["docs", "ocr"]
+  }
+]

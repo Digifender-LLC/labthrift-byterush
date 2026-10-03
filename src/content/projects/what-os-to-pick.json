@@ -1,0 +1,176 @@
+{
+  "id": "what-os-to-pick",
+  "title": "What OS to put on it",
+  "summary": "Debian or Ubuntu Server if the box is dedicated. Leave Windows if you still use the laptop as a laptop.",
+  "sourceGuide": "https://labthrift.com/guides/what-os-to-pick",
+  "startBeat": "start",
+  "topics": [
+    "beginner",
+    "os"
+  ],
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "An OS (operating system) is what the computer boots into — the software that runs before any apps.\n\nYou pick one, install it, and that is what this computer is from then on.\n\nYou don't need a new computer to pick an OS. You do need to know how you'll use the box.",
+      "continue": "gloss"
+    },
+    "gloss": {
+      "id": "gloss",
+      "body": "Plain words:\n\n• Install = copy the OS onto the computer's disk so it starts every time\n• ISO = the installer file you download (like a disc image)\n• Server vs Desktop = text login vs a mouse-and-windows screen\n\nMost home-lab guides assume Debian or Ubuntu. That's why we steer there.",
+      "milestone": true,
+      "continue": "iso-what"
+    },
+    "branch": {
+      "id": "branch",
+      "body": "How will you use this computer?",
+      "choices": [
+        {
+          "label": "Still my daily laptop",
+          "next": "daily"
+        },
+        {
+          "label": "Old PC I can dedicate",
+          "next": "dedicated"
+        },
+        {
+          "label": "I already want many VMs",
+          "next": "proxmox"
+        },
+        {
+          "label": "I already have disks to fill",
+          "next": "nas"
+        }
+      ]
+    },
+    "daily": {
+      "id": "daily",
+      "body": "Leave the OS it has — Windows or macOS.\n\nDon't wipe a machine you still write papers on. You can learn Linux later on a different, spare box.",
+      "continue": "daily-next"
+    },
+    "daily-next": {
+      "id": "daily-next",
+      "body": "What you can still do this week: read along, mark stack interests, and wait for a spare PC.\n\nWhen you get one, come back to \"Old PC I can dedicate.\"",
+      "continue": "wrap"
+    },
+    "dedicated": {
+      "id": "dedicated",
+      "body": "Install Debian or Ubuntu Server on a dedicated box.\n\nBoth are free, boring, and everywhere online. Ubuntu Desktop is fine if you want a screen and a mouse while you learn.",
+      "continue": "dedicated-pick"
+    },
+    "dedicated-pick": {
+      "id": "dedicated-pick",
+      "body": "Pick the flavor that matches your comfort:",
+      "choices": [
+        {
+          "label": "Ubuntu Server (more hand-holding)",
+          "next": "ubuntu"
+        },
+        {
+          "label": "Debian (fewer surprise changes)",
+          "next": "debian"
+        },
+        {
+          "label": "Ubuntu Desktop (screen + mouse)",
+          "next": "desktop"
+        }
+      ]
+    },
+    "ubuntu": {
+      "id": "ubuntu",
+      "body": "Ubuntu Server is the friendly default.\n\nYou'll download an ISO from ubuntu.com (look for Server, not Desktop). The next guided project walks the weekend install.\n\nWhat you'll see later: a black text screen asking for a username — that's normal for Server.",
+      "milestone": true,
+      "continue": "lts"
+    },
+    "debian": {
+      "id": "debian",
+      "body": "Debian if you want fewer surprise changes between releases.\n\nSlightly less hand-holding than Ubuntu, same idea: a free Linux you leave on. Download the netinst or live ISO from debian.org.",
+      "milestone": true,
+      "continue": "lts"
+    },
+    "desktop": {
+      "id": "desktop",
+      "body": "Ubuntu Desktop is the same family as Server, with icons and a mouse.\n\nFine while you learn. You can still install server tools later. Download Desktop from ubuntu.com.",
+      "milestone": true,
+      "continue": "lts"
+    },
+    "download-hint": {
+      "id": "download-hint",
+      "body": "When you download:\n\n• Prefer the official site (ubuntu.com / debian.org) — not a random mirror blog\n• You'll get a big .iso file (a few GB)\n• Next weekend: write that file to a USB stick and boot from it\n\nYou don't need to burn a real disc.",
+      "continue": "stuck-os"
+    },
+    "proxmox": {
+      "id": "proxmox",
+      "body": "Proxmox lets several \"pretend computers\" (VMs) share one box.\n\nNot day one unless you already know you want that. Still $0 — but the learning curve is steeper. Most beginners start with plain Ubuntu/Debian first.",
+      "continue": "vm-gloss"
+    },
+    "proxmox-path": {
+      "id": "proxmox-path",
+      "body": "If you're sure: download Proxmox VE from proxmox.com and treat the next weekend like any other OS install.\n\nIf you're unsure: pick Ubuntu Server instead — you can add Proxmox later on another disk or box.",
+      "choices": [
+        {
+          "label": "I'll stick with Ubuntu/Debian for now",
+          "next": "dedicated"
+        },
+        {
+          "label": "I'll try Proxmox anyway",
+          "next": "wrap"
+        }
+      ]
+    },
+    "nas": {
+      "id": "nas",
+      "body": "TrueNAS, Unraid, and OpenMediaVault are file-box operating systems — great when you have disks to fill.\n\nLater, not this weekend, unless storage is already the whole goal.",
+      "continue": "nas-path"
+    },
+    "nas-path": {
+      "id": "nas-path",
+      "body": "For a first lab that runs apps and learning commands: Ubuntu/Debian is simpler.\n\nCome back to a NAS OS when you have two+ disks and a clear \"I need a file box\" job.",
+      "choices": [
+        {
+          "label": "OK — dedicated Linux first",
+          "next": "dedicated"
+        },
+        {
+          "label": "Storage is the whole goal",
+          "next": "wrap"
+        }
+      ]
+    },
+    "stuck-os": {
+      "id": "stuck-os",
+      "body": "If you're stuck choosing:\n\nDefault = Ubuntu Server on a spare PC.\n\nThat one choice matches the most beginner guides. You can always reinstall later — disks are erasable.",
+      "continue": "wrap"
+    },
+    "wrap": {
+      "id": "wrap",
+      "body": "You've picked a direction for the OS.\n\nNext guided project: your first weekend — USB installer, boot menu, name the machine, reach it from the couch.",
+      "continue": "end-remind"
+    },
+    "end": {
+      "id": "end",
+      "body": "OS choice locked in for now. No shopping required — just a download when you're ready to install.",
+      "milestone": true,
+      "end": true
+    },
+    "iso-what": {
+      "id": "iso-what",
+      "body": "You'll download an .iso — think of it as a complete installer packed into one file.\n\nLater you copy that file onto a USB stick so the computer can boot the installer instead of the old OS.",
+      "continue": "branch"
+    },
+    "lts": {
+      "id": "lts",
+      "body": "If Ubuntu offers \"LTS\" — Long Term Support — pick that.\n\nIt means fewer forced jumps and longer security updates. Boring is good.",
+      "continue": "download-hint"
+    },
+    "vm-gloss": {
+      "id": "vm-gloss",
+      "body": "VM = virtual machine = a pretend computer inside a real one.\n\nUseful later. On day one, one real OS on bare metal (the actual PC) is simpler.",
+      "continue": "proxmox-path"
+    },
+    "end-remind": {
+      "id": "end-remind",
+      "body": "Whatever you picked: write down the name (Ubuntu Server, Debian, Desktop, or other) so the weekend install matches.\n\nMismatch = wrong ISO on the stick.",
+      "continue": "end"
+    }
+  }
+}

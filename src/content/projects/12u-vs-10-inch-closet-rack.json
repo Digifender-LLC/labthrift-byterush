@@ -1,0 +1,47 @@
+{
+  "id": "12u-vs-10-inch-closet-rack",
+  "title": "12U open frame vs 10-inch wall cabinet",
+  "summary": "Closet lab needs a place for a switch and UPS, not a 42U. 19-inch 12U is the default.",
+  "sourceGuide": "https://labthrift.com/guides/12u-vs-10-inch-closet-rack",
+  "startBeat": "start",
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "A closet lab needs a place to hang a switch and a UPS, not a 42U. The 19-inch 12U 2-post is the default because almost everything you already own is 19-inch.",
+      "choices": [
+        {
+          "label": "My gear is normal 19-inch",
+          "next": "19"
+        },
+        {
+          "label": "I already own 10-inch switches",
+          "next": "10"
+        },
+        {
+          "label": "I want a door on 19-inch gear",
+          "next": "cabinet"
+        }
+      ]
+    },
+    "19": {
+      "id": "19",
+      "body": "Default: StarTech 2POSTRACK12 — 12U 19-inch 2-post, 350 lb. Street was about $156 this pass. Put the metal strip and UPS on the same frame. Tie leads with hook-and-loop.",
+      "continue": "skip"
+    },
+    "10": {
+      "id": "10",
+      "body": "NavePoint 6U 10-inch wall cabinet looks quieter and smaller — but 10-inch switches are a specialty buy. Only if you already own that gear. Not the default.",
+      "continue": "skip"
+    },
+    "cabinet": {
+      "id": "cabinet",
+      "body": "StarTech RK12WALHM — 12U 19-inch wall cabinet with a door. Recheck the live price. Still 19-inch.",
+      "continue": "skip"
+    },
+    "skip": {
+      "id": "skip",
+      "body": "Skip a full-size 42U. Skip RGB rack accents. Skip the 10-inch cabinet unless you are buying 10-inch networking on purpose.",
+      "end": true
+    }
+  }
+}

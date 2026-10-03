@@ -11,3 +11,5 @@ out/
 bun.lock
 dist/
 coverage/
+
+*.tsbuildinfo

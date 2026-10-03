@@ -103,3 +103,7 @@ worker/           # Hono Worker: WebAuthn, sessions, /api/sync (D1)
 migrations/       # D1 schema (wrangler d1 migrations apply DB)
 docs/             # shared-passkeys.md: RP ID + preview-vs-prod rules
 ```
+
+## Design documentation
+
+[Product, requirements and architecture documents](docs/design/README.md) cover the frontend, supporting backend and the Runs-to-ByteRush consolidation. Release evidence is tracked separately from design intent.

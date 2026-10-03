@@ -1,0 +1,116 @@
+{
+  "id": "first-backup",
+  "title": "A backup of the house folder",
+  "summary": "Second copy on a USB you already have, or another old PC. rsync. RAID is not a backup.",
+  "sourceGuide": "https://labthrift.com/guides/first-backup",
+  "topics": [
+    "backup",
+    "files"
+  ],
+  "recommendsIfInterested": [
+    "photos"
+  ],
+  "startBeat": "start",
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "The share is useful the day that computer dies only if a second copy exists. That second copy is a backup. Tool: rsync — already on Debian and Ubuntu.",
+      "choices": [
+        {
+          "label": "USB disk I already have",
+          "next": "usb"
+        },
+        {
+          "label": "Another old PC on the house network",
+          "next": "other-pc"
+        }
+      ]
+    },
+    "usb": {
+      "id": "usb",
+      "body": "Plug the disk in. Find it with lsblk (often /dev/sdb1 — use what lsblk prints). Mount: sudo mkdir -p /mnt/backup && sudo mount /dev/sdb1 /mnt/backup. Then: rsync -a /srv/share/ /mnt/backup/share/ — trailing slashes matter.",
+      "continue": "after"
+    },
+    "other-pc": {
+      "id": "other-pc",
+      "body": "If SSH already works on the second box: rsync -a /srv/share/ otheruser@other-address:share-backup/. Trailing slashes still matter.",
+      "continue": "after"
+    },
+    "after": {
+      "id": "after",
+      "body": "Confirm files landed before you trust it. USB path: sudo umount /mnt/backup, then leave the disk unplugged most of the time. Same command next week — rsync only copies what changed.",
+      "continue": "photos-ask"
+    },
+    "photos-ask": {
+      "id": "photos-ask",
+      "body": "Phone photos are a different pile. Interested in a real photo backup later — Immich, Prism, or neither for now?",
+      "choices": [
+        {
+          "label": "Yeah — mark me interested in photos",
+          "next": "photos-pick",
+          "setsStatus": [
+            {
+              "itemId": "photos",
+              "status": "interested"
+            }
+          ]
+        },
+        {
+          "label": "Skip photo apps for now",
+          "next": "done",
+          "setsStatus": [
+            {
+              "itemId": "photos",
+              "status": "skipped"
+            }
+          ]
+        }
+      ]
+    },
+    "photos-pick": {
+      "id": "photos-pick",
+      "body": "Two common paths. Immich is the full Google-Photos-shaped stack. Prism is lighter. Pick a direction or leave it for later.",
+      "choices": [
+        {
+          "label": "Immich sounds right",
+          "next": "pick-immich",
+          "setsStatus": [
+            {
+              "itemId": "immich",
+              "status": "interested"
+            }
+          ]
+        },
+        {
+          "label": "Prism — keep it light",
+          "next": "pick-prism",
+          "setsStatus": [
+            {
+              "itemId": "prism",
+              "status": "interested"
+            }
+          ]
+        },
+        {
+          "label": "Decide later",
+          "next": "done"
+        }
+      ]
+    },
+    "pick-immich": {
+      "id": "pick-immich",
+      "body": "Noted. When you are ready, run Immich: first weekend. Docker on the lab box, phone app pointed at your LAN.",
+      "end": true
+    },
+    "pick-prism": {
+      "id": "pick-prism",
+      "body": "Noted. Prism intro is a short stub when you want it — same idea, less surface area.",
+      "end": true
+    },
+    "done": {
+      "id": "done",
+      "body": "Folder backup is enough for today. Come back when photos start to itch.",
+      "end": true
+    }
+  }
+}

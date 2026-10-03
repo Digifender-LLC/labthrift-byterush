@@ -1,0 +1,67 @@
+{
+  "id": "immich-make-it-better",
+  "title": "Immich: make it better",
+  "summary": "After first upload works: disk headroom, backups of Immich itself, and one more user. Not a rewrite.",
+  "sourceGuide": "https://labthrift.com/guides/immich",
+  "topics": [
+    "photos",
+    "immich"
+  ],
+  "recommendsIfInstalled": [
+    "immich"
+  ],
+  "startBeat": "start",
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "Uploads already work. Now keep Immich from eating the disk and make sure you can rebuild it.",
+      "continue": "disk"
+    },
+    "disk": {
+      "id": "disk",
+      "body": "df -h the upload volume. If it shares the OS disk, plan a move before it fills. Thumbnails and ML models grow quietly.",
+      "continue": "backup-immich"
+    },
+    "backup-immich": {
+      "id": "backup-immich",
+      "body": "Back up the library path and the Postgres volume (or Immich's documented dump). Phone upload is not a backup of Immich.",
+      "continue": "users"
+    },
+    "users": {
+      "id": "users",
+      "body": "Add one household user if someone else will upload. Shared albums beat one giant admin pile.",
+      "choices": [
+        {
+          "label": "Done for now",
+          "next": "done",
+          "setsStatus": [
+            {
+              "itemId": "immich",
+              "status": "installed"
+            }
+          ]
+        },
+        {
+          "label": "I want the lighter Prism path instead",
+          "next": "pivot-prism",
+          "setsStatus": [
+            {
+              "itemId": "prism",
+              "status": "interested"
+            }
+          ]
+        }
+      ]
+    },
+    "pivot-prism": {
+      "id": "pivot-prism",
+      "body": "Fine. Leave Immich running or stop it — your call. Prism intro is the short stub when you want fewer moving parts.",
+      "end": true
+    },
+    "done": {
+      "id": "done",
+      "body": "Immich stays installed. Next itch is usually remote access — that is a separate, careful project. Not today.",
+      "end": true
+    }
+  }
+}

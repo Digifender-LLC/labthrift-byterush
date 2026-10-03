@@ -1,0 +1,154 @@
+{
+  "id": "start-with-what-you-have",
+  "title": "Start with what you already have",
+  "summary": "Don't buy a rack on day one. Use the old laptop or a $20–60 Marketplace OptiPlex.",
+  "sourceGuide": "https://labthrift.com/guides/start-with-what-you-have",
+  "startBeat": "start",
+  "topics": [
+    "beginner",
+    "start"
+  ],
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "You don't need to spend money to start a home lab.\n\nA home lab is just a computer you leave on — so you can try things without breaking the laptop you write email on.\n\nThe first lab is usually an old laptop that still turns on, or a retired office PC someone is giving away.",
+      "continue": "why-lab"
+    },
+    "what-counts": {
+      "id": "what-counts",
+      "body": "What counts as \"enough\"?\n\n• Turns on and shows a screen\n• Has about 8 GB of memory (RAM) or more — that's the short-term sticky notes inside the computer\n• Has a real ethernet (network cable) port if you can find one — Wi‑Fi works too\n\nYou do not need a rack, a NAS, or a new mini PC yet.",
+      "milestone": true,
+      "continue": "ram-check"
+    },
+    "look": {
+      "id": "look",
+      "body": "Look in the closet, guest room, drawer of chargers, or the shelf behind the TV.\n\nA five-year-old laptop is fine. A small office box (Dell OptiPlex, HP EliteDesk, Lenovo ThinkCentre) is fine.\n\nWhat do you already have?",
+      "choices": [
+        {
+          "label": "I already have a box that boots",
+          "next": "have-box"
+        },
+        {
+          "label": "Nothing in the house",
+          "next": "marketplace"
+        },
+        {
+          "label": "I have something loud / power-hungry",
+          "next": "loud"
+        }
+      ]
+    },
+    "have-box": {
+      "id": "have-box",
+      "body": "Leave it plugged in. That is the lab.\n\nLearn on it first. A quieter or newer mini PC waits until this one is actually in the way — after you've used it for real.",
+      "continue": "dedicate-check"
+    },
+    "dedicate-check": {
+      "id": "dedicate-check",
+      "body": "Is this computer still someone's daily machine (school, work, the only family laptop)?\n\nIf yes: don't wipe it yet. Borrow time on it later, or find a second box.\n\nIf it's spare: you can dedicate it — meaning this computer's main job becomes \"the lab.\"",
+      "choices": [
+        {
+          "label": "It's spare — I can dedicate it",
+          "next": "dedicated-ok"
+        },
+        {
+          "label": "Still someone's daily machine",
+          "next": "daily-caution"
+        }
+      ]
+    },
+    "daily-caution": {
+      "id": "daily-caution",
+      "body": "Keep the OS it has for now. Don't erase a machine people still need.\n\nYour plan can still continue — next you'll pick an OS for a future dedicated box, or wait until you find a spare.",
+      "continue": "marketplace-wipe"
+    },
+    "dedicated-ok": {
+      "id": "dedicated-ok",
+      "body": "Good. A dedicated box can be wiped and given a simple Linux later.\n\nBefore you erase anything: copy off photos or papers you care about. Empty machine? You're already done.",
+      "milestone": true,
+      "continue": "marketplace-wipe"
+    },
+    "marketplace": {
+      "id": "marketplace",
+      "body": "Marketplace, Buy Nothing, or a friend clearing a desk.\n\nAsk for: boots to a desktop or login screen, about 8 GB+ memory, and a real ethernet port if possible.\n\nSkip giant loud 1U rack servers for now — they suck power and sound like a leaf blower.",
+      "continue": "marketplace-budget"
+    },
+    "marketplace-budget": {
+      "id": "marketplace-budget",
+      "body": "Budget: $0–60 is plenty for a first box.\n\nNames you'll see: OptiPlex, EliteDesk, ThinkCentre, NUC. \"Tiny\" / \"micro\" / \"mini\" usually means it sits quiet on a shelf.\n\nIf the seller says \"no hard drive,\" that's OK — a used SSD is cheap later. Confirm it powers on.",
+      "continue": "marketplace-wipe"
+    },
+    "loud": {
+      "id": "loud",
+      "body": "Use the loud one for a week anyway.\n\nYou'll learn whether you actually leave a computer on overnight. If the noise still bothers you after that, look at a quiet tiny PC — only then.",
+      "continue": "power-note"
+    },
+    "power-note": {
+      "id": "power-note",
+      "body": "Power-hungry boxes also cost more on the electric bill if you leave them on 24/7.\n\nFor a first lab, a laptop or tiny office PC is usually quieter and cheaper to run than a big tower with a gaming GPU.",
+      "continue": "marketplace-wipe"
+    },
+    "marketplace-wipe": {
+      "id": "marketplace-wipe",
+      "body": "If it came from Marketplace: wipe before you trust it.\n\n\"Wipe\" means erase the disk and install a fresh OS so old accounts and mystery software are gone.\n\nAlready wiped and dedicated? You'll pick an OS next in the plan.",
+      "continue": "ethernet-gloss"
+    },
+    "skip-buys": {
+      "id": "skip-buys",
+      "body": "Skip buying on day one:\n\n• A rack or rack rails\n• A new managed switch\n• A NAS \"starter kit\"\n• Used 1U space heaters\n• 10‑gig networking\n\nYou are allowed to spend later. You are not required to spend to start.",
+      "milestone": true,
+      "continue": "stuck-find"
+    },
+    "stuck-find": {
+      "id": "stuck-find",
+      "body": "If you're stuck finding hardware:\n\n• Ask one friend who works in an office — retired PCs get tossed often\n• Check local Buy Nothing with \"desktop\" or \"laptop\"\n• A used Chromebook is a weak lab (locked-down); prefer a regular Windows/Linux-capable PC\n\nStill nothing? Pause this project. Come back when a box appears — the next steps wait.",
+      "choices": [
+        {
+          "label": "I have a box ready",
+          "next": "habit"
+        },
+        {
+          "label": "Still hunting — what next anyway?",
+          "next": "habit"
+        }
+      ]
+    },
+    "ready": {
+      "id": "ready",
+      "body": "You're set for the idea of a first lab: one spare computer, left on, nothing fancy bought yet.\n\nYour plan continues with picking an OS — what the computer boots into. Resume from your ByteRush feed when you are ready.",
+      "continue": "not-yet"
+    },
+    "end": {
+      "id": "end",
+      "body": "You have reached the end of this walkthrough.\n\nRemember: the lab is the habit of leaving something on and learning — not the shopping cart.",
+      "milestone": true,
+      "end": true
+    },
+    "why-lab": {
+      "id": "why-lab",
+      "body": "Why leave a computer on?\n\nSo services can sit there: a file share, photo backups, a small website for the house.\n\nYour daily laptop can sleep. The lab stays awake.",
+      "continue": "what-counts"
+    },
+    "ram-check": {
+      "id": "ram-check",
+      "body": "How to check memory (RAM) quickly:\n\n• Windows: Settings → System → About — look for \"Installed RAM\"\n• Mac: Apple menu → About This Mac\n• If it won't boot far enough: anything that ran Windows 10 with 8 GB is usually fine\n\n4 GB can work for learning; 8 GB is more comfortable.",
+      "continue": "look"
+    },
+    "ethernet-gloss": {
+      "id": "ethernet-gloss",
+      "body": "Ethernet = the plastic network cable click-port (looks like a fat phone jack).\n\nWi‑Fi works. Cable is steadier for a box that lives in a closet.\n\nYou do not need a new switch yet — one cable into your existing router or Wi‑Fi is enough.",
+      "continue": "skip-buys"
+    },
+    "habit": {
+      "id": "habit",
+      "body": "The real milestone isn't hardware.\n\nIt's the habit: one machine you treat as \"always on,\" where it's OK to experiment.\n\nBreakages stay on the lab, not on the family laptop.",
+      "milestone": true,
+      "continue": "ready"
+    },
+    "not-yet": {
+      "id": "not-yet",
+      "body": "Things that can wait months:\n\n• Fancy UPS (battery backup)\n• Homelab Reddit shopping lists\n• Matching rackmount everything\n\nLearn the boring path first.",
+      "continue": "end"
+    }
+  }
+}

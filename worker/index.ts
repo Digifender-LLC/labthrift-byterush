@@ -6,19 +6,12 @@ import { Hono } from "hono";
 import type { Env } from "./env";
 import { auth } from "./auth";
 import { getSessionUser } from "./session";
-import {
-  getProgress,
-  mirrorStructuredRows,
-  putProgress,
-} from "./db";
-import {
-  EMPTY_PROGRESS,
-  isProgressPayload,
-  mergeProgress,
-} from "../src/lib/syncTypes";
+import { getProgress, updateProgress } from "./db";
+import { isProgressPayload, mergeProgress, resetSnapshot } from "../src/lib/syncTypes";
 
 const app = new Hono<{ Bindings: Env }>();
 
+app.use("/api/*", async (c, next) => { await next(); c.header("Cache-Control", "no-store"); });
 app.route("/api/auth", auth);
 
 /**
@@ -43,24 +36,31 @@ app.put("/api/sync", async (c) => {
     return c.json({ error: "Malformed progress payload." }, 400);
   }
 
-  const stored = (await getProgress(c.env.DB, user.id)) ?? EMPTY_PROGRESS;
-  const merged = mergeProgress(incoming, stored);
-  await putProgress(c.env.DB, user.id, merged);
-  await mirrorStructuredRows(c.env.DB, user.id, merged);
-  return c.json({ progress: merged });
+  const progress = await updateProgress(c.env.DB, user.id, stored => {
+    // Only DELETE can advance a generation. v1 clients after a reset receive
+    // the current snapshot; omission cannot resurrect pre-reset progress.
+    if ((incoming.generation ?? 0) !== stored.generation) return stored;
+    return mergeProgress(incoming, stored);
+  });
+  return c.json({ progress });
 });
 
-// "Reset all progress" for a signed-in user: without this, the grow-only
-// merge would resurrect old progress on the next sync. Inventory is kept —
-// it describes their lab, not their learning progress.
 app.delete("/api/sync", async (c) => {
   const user = await getSessionUser(c, c.env.DB);
   if (!user) return c.json({ error: "Sign in first." }, 401);
-  await c.env.DB.batch([
-    c.env.DB.prepare("DELETE FROM progress WHERE user_id = ?1").bind(user.id),
-    c.env.DB.prepare("DELETE FROM quiz_answers WHERE user_id = ?1").bind(user.id),
-  ]);
-  return c.json({ ok: true });
+  const body = await c.req.json().catch(() => null);
+  if (body !== null && (typeof body.id !== "string" || body.id.length > 100 || !Number.isSafeInteger(body.generation) || body.generation < 0))
+    return c.json({ error: "Malformed reset request." }, 400);
+  const id = body?.id ?? crypto.randomUUID();
+  const progress = await updateProgress(c.env.DB, user.id, stored => {
+    if (stored.resetId === id || (body && body.generation !== stored.generation)) return stored;
+    return resetSnapshot(stored, id);
+  });
+  return c.json({ ok: true, progress });
+});
+app.onError((err, c) => {
+  console.error("Worker request failed:", err.message);
+  return c.json({ error: "Temporarily unavailable. Your device will retry sync." }, 503);
 });
 
 // Unknown /api paths get a JSON 404; anything else falls through to the

@@ -1,0 +1,133 @@
+{
+  "id": "first-weekend",
+  "title": "Your first weekend",
+  "summary": "Install the OS, give it a name, plug it in, reach it from the couch. Not a shopping trip.",
+  "sourceGuide": "https://labthrift.com/guides/first-weekend",
+  "startBeat": "start",
+  "topics": [
+    "beginner",
+    "install"
+  ],
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "This is a weekend, not a shopping trip.\n\nYou already have the computer. The job: get it on, named, and reachable from the couch.",
+      "continue": "checklist"
+    },
+    "checklist": {
+      "id": "checklist",
+      "body": "You'll roughly do this:\n\n1. Copy off anything you care about\n2. Write the OS installer to a USB stick\n3. Boot from the stick and install\n4. Name the computer and create a user\n5. Plug network\n6. Find its address\n7. Log in from your laptop (SSH)\n8. Leave it on\n\nOne step at a time.",
+      "milestone": true,
+      "continue": "tools"
+    },
+    "backup": {
+      "id": "backup",
+      "body": "1. Backup anything you care about.\n\nCopy photos or papers to a stick or another computer. Empty machine or already wiped? Skip.",
+      "choices": [
+        {
+          "label": "Machine is empty / wiped",
+          "next": "usb"
+        },
+        {
+          "label": "I need to copy stuff off first",
+          "next": "copy-off"
+        }
+      ]
+    },
+    "copy-off": {
+      "id": "copy-off",
+      "body": "Copy what you care about first.\n\nThen, if it came from Marketplace, plan to wipe during install (the installer will erase the disk you pick).",
+      "continue": "usb"
+    },
+    "usb": {
+      "id": "usb",
+      "body": "2. Make a USB installer.\n\nDownload Ubuntu Server or Debian from the official site. Write the ISO with balenaEtcher, Rufus (Windows), or Ventoy.\n\nAn 8 GB stick is enough. What you'll see: a progress bar, then \"ISO written\" / success.",
+      "continue": "usb-stuck"
+    },
+    "usb-stuck": {
+      "id": "usb-stuck",
+      "body": "If you're stuck writing the USB:\n\n• Try a different stick\n• Re-download the ISO if the writer says checksum/verify failed\n• On Windows, Rufus is common; on Mac, balenaEtcher\n\nYou should end with a stick that another computer might offer as a boot device.",
+      "continue": "boot"
+    },
+    "boot": {
+      "id": "boot",
+      "body": "3. Boot from the USB.\n\nPower on and tap F12, F10, Esc, or F2 (varies by brand) to open the boot menu. Pick the USB stick — not the internal disk yet.\n\nWhat you'll see: a text or graphical installer, not your old Windows desktop.",
+      "milestone": true,
+      "continue": "boot-stuck"
+    },
+    "boot-stuck": {
+      "id": "boot-stuck",
+      "body": "If it ignores the USB:\n\n• Remake the stick\n• Try another USB port (back of a desktop)\n• In BIOS/UEFI, disable Secure Boot temporarily if the installer complains\n• Make sure you picked the stick in the one-time boot menu\n\nBIOS/UEFI = the tiny setup screen before the OS — blue/gray menus, mouse often doesn't work.",
+      "continue": "install"
+    },
+    "install": {
+      "id": "install",
+      "body": "Install to the internal disk. One disk is fine. Take the defaults.\n\nYou'll be asked language, keyboard, and which disk to erase. Double-check the disk name before confirming erase.",
+      "continue": "name"
+    },
+    "name": {
+      "id": "name",
+      "body": "4. Give it a name and a user.\n\nPick a hostname you'll remember: lab, closet, office. Create a username (not \"admin\" as the only tip — any simple name is fine).\n\nUbuntu: don't skip the SSH server checkbox if you see it — that lets you log in from the couch later.",
+      "milestone": true,
+      "continue": "ssh-checkbox"
+    },
+    "net": {
+      "id": "net",
+      "body": "5. Plug ethernet if it has a port.\n\nWi‑Fi is fine; a cable drops fewer overnight connections. Finish the installer and reboot when it says so. Remove the USB when asked.",
+      "continue": "reboot"
+    },
+    "find": {
+      "id": "find",
+      "body": "6. Find its address.\n\nOn the lab computer (with a screen): run hostname -I and note the number like 192.168.1.50.\n\nOr check your router's device list for the new name.\n\nNo fancy static IP yet — DHCP (automatic address) is fine.",
+      "continue": "find-stuck"
+    },
+    "find-stuck": {
+      "id": "find-stuck",
+      "body": "If you can't find an address:\n\n• Confirm the cable lights blink\n• On the lab box: ip a or hostname -I\n• Reboot the router only as a last resort\n• Same Wi‑Fi network as your laptop — guest Wi‑Fi often blocks device-to-device",
+      "continue": "ssh"
+    },
+    "ssh": {
+      "id": "ssh",
+      "body": "7. From the couch laptop:\n\n```\nssh you@that-address\n```\n\nSwap you for the username you created, and that-address for the number.\n\nFirst time: it asks to trust the host key — type yes. Then password (nothing shows as you type). Try hostname. Type exit to leave.",
+      "continue": "update"
+    },
+    "update": {
+      "id": "update",
+      "body": "8. Still connected, update packages:\n\n```\nsudo apt update && sudo apt upgrade\n```\n\n```\nsudo = \"do this as the administrator for one command.\" It will ask your password again. Let it finish; reboots if it asks.\n```",
+      "milestone": true,
+      "continue": "leave"
+    },
+    "leave": {
+      "id": "leave",
+      "body": "9. Leave it on.\n\nThat is the lab. Skip Kubernetes, Docker Swarm, a new mini PC, 10G, and a UPS until it has been on a week without drama.",
+      "continue": "celebrate-week"
+    },
+    "end": {
+      "id": "end",
+      "body": "Weekend checklist: installed, named, reachable, left on. Check each on your own machine; finishing this walkthrough does not verify it.\n\nNext guided project: a deeper pass on SSH from the couch — troubleshooting refused connections and keys later.",
+      "milestone": true,
+      "end": true
+    },
+    "tools": {
+      "id": "tools",
+      "body": "Have nearby:\n\n• USB stick (8 GB+)\n• Another computer to download the ISO\n• Screen + keyboard for the lab during install (borrow the TV HDMI if needed)\n• Ethernet cable if you have one",
+      "continue": "backup"
+    },
+    "reboot": {
+      "id": "reboot",
+      "body": "After install, the machine reboots into the new OS.\n\nWhat you'll see on Server: a text login (username, then password). On Desktop: a graphical login.\n\nLog in once at the machine before you chase SSH.",
+      "continue": "find"
+    },
+    "ssh-checkbox": {
+      "id": "ssh-checkbox",
+      "body": "During Ubuntu Server install, a checkbox for OpenSSH / SSH server appears.\n\nCheck it. That installs the program that listens for your couch login.\n\nMissed it? You can install later: sudo apt install openssh-server — covered again in the SSH run.",
+      "continue": "net"
+    },
+    "celebrate-week": {
+      "id": "celebrate-week",
+      "body": "If apt upgrade finished and SSH worked once, the weekend succeeded.\n\nLeave the box on. Notice it tomorrow. That boring uptime is the point.",
+      "milestone": true,
+      "continue": "end"
+    }
+  }
+}

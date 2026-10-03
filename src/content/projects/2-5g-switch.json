@@ -1,0 +1,61 @@
+{
+  "id": "2-5g-switch",
+  "title": "A faster switch for a first home lab",
+  "summary": "Don't buy a switch to start. When file copies crawl, TL-SG108S-M2 is the quiet 2.5G default.",
+  "sourceGuide": "https://labthrift.com/guides/2-5g-switch",
+  "startBeat": "start",
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "You don't need a new switch to start. Plug the old laptop into the router you already have. Buy a faster switch later, if file copies actually crawl.",
+      "choices": [
+        {
+          "label": "Copies crawl — I need 2.5G now",
+          "next": "pick"
+        },
+        {
+          "label": "Still on the router / gigabit is fine",
+          "next": "wait"
+        }
+      ]
+    },
+    "wait": {
+      "id": "wait",
+      "body": "Stay put. 2.5G still uses cables you already have. Most first labs stall because one old switch is the bottleneck — when that day comes, come back.",
+      "end": true
+    },
+    "pick": {
+      "id": "pick",
+      "body": "Those extra-fast ports are 2.5G — a bit more than twice gigabit. Start here, worry about 10G later.",
+      "choices": [
+        {
+          "label": "Default: silent, no config",
+          "next": "tplink"
+        },
+        {
+          "label": "I care about warranty paper",
+          "next": "trendnet"
+        },
+        {
+          "label": "I need VLANs or 10G to the NAS",
+          "next": "managed"
+        }
+      ]
+    },
+    "tplink": {
+      "id": "tplink",
+      "body": "TP-Link TL-SG108S-M2: 8× 2.5G, fanless, unmanaged. MSRP ~$80; sale streets lower. Skip no-name 5-ports with one fast port and four leftovers.",
+      "end": true
+    },
+    "trendnet": {
+      "id": "trendnet",
+      "body": "TRENDnet TEG-S380: 8× 2.5G, fanless, NDAA/TAA, lifetime warranty. List ~$88; street often $74–80.",
+      "end": true
+    },
+    "managed": {
+      "id": "managed",
+      "body": "TRENDnet TEG-3102WS: 8× 2.5G + 2× 10G SFP+, managed, fanless. About $200. Only if you need VLANs or a 10G DAC to the NAS.",
+      "end": true
+    }
+  }
+}

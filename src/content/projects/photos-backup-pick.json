@@ -1,0 +1,92 @@
+{
+  "id": "photos-backup-pick",
+  "title": "Photo backup: pick a path",
+  "summary": "Interested in backing up phone photos? Immich, Prism, or skip. Sets your stack.",
+  "sourceGuide": "https://labthrift.com/guides/first-backup",
+  "topics": [
+    "photos",
+    "backup"
+  ],
+  "recommendsIfInterested": [
+    "photos"
+  ],
+  "startBeat": "start",
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "Phone photos are not the house share. Want a dedicated photo backup later?",
+      "choices": [
+        {
+          "label": "Yes — interested in photo backup",
+          "next": "pick",
+          "setsStatus": [
+            {
+              "itemId": "photos",
+              "status": "interested"
+            }
+          ]
+        },
+        {
+          "label": "Not now",
+          "next": "skip",
+          "setsStatus": [
+            {
+              "itemId": "photos",
+              "status": "skipped"
+            }
+          ]
+        }
+      ]
+    },
+    "pick": {
+      "id": "pick",
+      "body": "Immich is the full stack. Prism is lighter. Folder + rsync still works if you hate apps.",
+      "choices": [
+        {
+          "label": "Immich",
+          "next": "immich",
+          "setsStatus": [
+            {
+              "itemId": "immich",
+              "status": "interested"
+            }
+          ]
+        },
+        {
+          "label": "Prism",
+          "next": "prism",
+          "setsStatus": [
+            {
+              "itemId": "prism",
+              "status": "interested"
+            }
+          ]
+        },
+        {
+          "label": "Just folders for now",
+          "next": "folders"
+        }
+      ]
+    },
+    "immich": {
+      "id": "immich",
+      "body": "Next: Immich first weekend. Docker on the lab box, then the phone app.",
+      "end": true
+    },
+    "prism": {
+      "id": "prism",
+      "body": "Next: Prism intro when you want the short path.",
+      "end": true
+    },
+    "folders": {
+      "id": "folders",
+      "body": "Keep dumping Camera to the share and rsync that share. Revisit Immich or Prism when browsing gets painful.",
+      "end": true
+    },
+    "skip": {
+      "id": "skip",
+      "body": "Okay. The house-folder backup run still covers files.",
+      "end": true
+    }
+  }
+}

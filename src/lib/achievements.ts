@@ -139,7 +139,7 @@ export const ACHIEVEMENTS: (Achievement & { check: Check })[] = [
   {
     id: "lab-cartographer",
     name: "Lab Cartographer",
-    description: "Map out your whole lab (10 gear questions)",
+    description: "Answer 10 gear questions",
     emoji: "🗺️",
     check: (p) => p.inventoryAnswered >= 10,
   },

@@ -1,5 +1,5 @@
 /* ByteRush / Tech Dose service worker — bump CACHE_VERSION on each deploy. */
-const CACHE_VERSION = "byterush-20260907-raid12";
+const CACHE_VERSION = "byterush-20261003-projects-v2";
 const SHELL_CACHE = `byterush-shell-${CACHE_VERSION}`;
 const STATIC_CACHE = `byterush-static-${CACHE_VERSION}`;
 

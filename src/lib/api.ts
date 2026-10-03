@@ -95,6 +95,6 @@ export function pushProgress(progress: ProgressPayload) {
 }
 
 /** Wipes the account's synced progress (used by "Reset all progress"). */
-export function deleteServerProgress() {
-  return request<{ ok: boolean }>("/api/sync", { method: "DELETE" });
+export function deleteServerProgress(reset: { id: string; generation: number }) {
+  return request<{ ok: boolean; progress: ProgressPayload }>("/api/sync", { method: "DELETE", json: reset });
 }

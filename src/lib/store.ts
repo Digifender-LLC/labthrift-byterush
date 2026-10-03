@@ -15,7 +15,8 @@ import type {
   PublicUser,
   QuizAnswerRecord,
 } from "./syncTypes";
-import { mergeProgress } from "./syncTypes";
+import { EMPTY_PROGRESS, normalizeProgress, mergeProgress, markActivity, resetSnapshot, type NormalizedProgress } from "./syncTypes";
+import { actOnProject, type ProjectAction } from "./projectProgress";
 import { throttleCelebrations } from "./celebrations";
 import { deleteServerProgress, fetchServerProgress, pushProgress } from "./api";
 import { setMuted } from "./sounds";
@@ -54,7 +55,10 @@ function yesterdayKey(): string {
   ).padStart(2, "0")}`;
 }
 
-interface AppState {
+interface AppState extends NormalizedProgress {
+  pendingAttach: string | null;
+  pendingReset: { id: string; generation: number } | null;
+  projectAction: (id: string, action: ProjectAction) => void;
   hydrated: boolean;
   onboarded: boolean;
   followedTopics: string[];
@@ -135,30 +139,8 @@ function buildSnapshot(s: {
 }
 
 /** The syncable slice of the current state. */
-export function toProgressPayload(s: {
-  xp: number;
-  cardsRead: number;
-  completedLessons: string[];
-  streak: number;
-  bestStreak: number;
-  lastActiveDay: string | null;
-  unlockedAchievements: string[];
-  followedTopics: string[];
-  quizAnswers: Record<string, QuizAnswerRecord>;
-  inventory: Record<string, InventoryStatus>;
-}): ProgressPayload {
-  return {
-    xp: s.xp,
-    cardsRead: s.cardsRead,
-    completedLessons: s.completedLessons,
-    streak: s.streak,
-    bestStreak: s.bestStreak,
-    lastActiveDay: s.lastActiveDay,
-    unlockedAchievements: s.unlockedAchievements,
-    followedTopics: s.followedTopics,
-    quizAnswers: s.quizAnswers,
-    inventory: s.inventory,
-  };
+export function toProgressPayload(s: ProgressPayload): NormalizedProgress {
+  return normalizeProgress(Object.fromEntries(Object.keys(EMPTY_PROGRESS).map(k => [k, s[k as keyof ProgressPayload]])) as unknown as ProgressPayload);
 }
 
 // Debounced background sync: batches rapid-fire actions (card taps) into one
@@ -178,57 +160,76 @@ function scheduleSync() {
   }, 1500);
 }
 
-async function flushSync(): Promise<void> {
+let syncing: Promise<ProgressPayload | null> | null = null;
+let accountEpoch = 0;
+let accountReady = false;
+async function flushSync(): Promise<ProgressPayload | null> {
+  if (syncing) { await syncing; return flushSync(); }
+  const owner = useApp.getState().user?.id;
+  const epoch = accountEpoch;
+  if (!owner || !accountReady) return null;
+  const valid = () => epoch === accountEpoch && useApp.getState().user?.id === owner;
+  syncing = (async () => {
+    try {
+      const pending = useApp.getState().pendingReset;
+      if (pending) {
+        const { progress } = await deleteServerProgress(pending);
+        if (!valid() || useApp.getState().pendingReset?.id !== pending.id) return null;
+        if (progress.resetId === pending.id) useApp.setState({ generation: progress.generation, pendingReset: null });
+        else useApp.setState({ ...normalizeProgress(progress), pendingReset: null });
+      }
+      const before = useApp.getState();
+      const { progress } = await pushProgress(toProgressPayload(before));
+      if (valid() && !useApp.getState().pendingReset) useApp.getState().applyServerProgress(progress);
+      return progress;
+    } catch { return null; } // Local state is persisted immediately; reconnect retries.
+  })();
+  try { return await syncing; } finally { syncing = null; }
+}
+export async function syncNow() { return flushSync(); }
+
+/** Attach anonymous work once; replace account-owned work before loading another account. */
+export async function attachAccount(user: PublicUser): Promise<void> {
+  const epoch = ++accountEpoch;
+  accountReady = false;
+  const prior = useApp.getState();
+  const anonymous = prior.progressUserId === null || prior.pendingAttach === user.id;
+  const switching = prior.progressUserId !== null && prior.progressUserId !== user.id;
+  useApp.setState({ ...(switching ? { ...EMPTY_PROGRESS, pendingReset: null, celebrations: [] } : {}), user, progressUserId: user.id, pendingAttach: anonymous ? user.id : null });
+  const { progress } = await fetchServerProgress();
+  if (epoch !== accountEpoch || useApp.getState().user?.id !== user.id) return;
+  const server = normalizeProgress(progress ?? EMPTY_PROGRESS);
   const current = useApp.getState();
-  if (!current.user) return;
-  try {
-    const { progress } = await pushProgress(toProgressPayload(current));
-    useApp.getState().applyServerProgress(progress);
-  } catch {
-    // Offline or signed out server-side; local state stays authoritative.
-  }
+  if (switching) useApp.setState({ ...server, onboarded: current.onboarded || !!server.followedTopics.length });
+  else if (anonymous) useApp.setState({ ...mergeProgress({ ...toProgressPayload(current), generation: server.generation, resetId: server.resetId }, server), pendingReset: null });
+  else if (!current.pendingReset) current.applyServerProgress(server);
+  useApp.setState({ pendingAttach: null });
+  accountReady = true;
+  await syncNow();
 }
 
-/** Immediate sync (used right after sign-in). Returns the merged snapshot. */
-export async function syncNow(): Promise<ProgressPayload | null> {
-  const s = useApp.getState();
-  if (!s.user) return null;
-  try {
-    const { progress } = await pushProgress(toProgressPayload(s));
-    useApp.getState().applyServerProgress(progress);
-    return progress;
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Pull server progress without pushing local state — used when signing into a
- * different account on a device that still holds another user's local snapshot.
- */
-export async function pullServerProgress(): Promise<ProgressPayload | null> {
-  const s = useApp.getState();
-  if (!s.user) return null;
-  try {
-    const { progress } = await fetchServerProgress();
-    if (progress) useApp.getState().applyServerProgress(progress);
-    return progress;
-  } catch {
-    return null;
-  }
+export function detachAccount() {
+  accountEpoch++;
+  accountReady = false;
+  useApp.setState({ ...EMPTY_PROGRESS, user: null, progressUserId: null, pendingAttach: null, pendingReset: null, celebrations: [] });
 }
 
 function attachOnlineRetry() {
   if (onlineListenerAttached || typeof window === "undefined") return;
   onlineListenerAttached = true;
   window.addEventListener("online", () => {
-    void flushSync();
+    const user = useApp.getState().user;
+    if (user && !accountReady) void attachAccount(user).catch(() => {});
+    else void flushSync();
   });
 }
 
 export const useApp = create<AppState>()(
   persist(
     (set, get) => ({
+      ...EMPTY_PROGRESS,
+      pendingReset: null,
+      pendingAttach: null,
       hydrated: false,
       onboarded: false,
       followedTopics: [],
@@ -266,7 +267,7 @@ export const useApp = create<AppState>()(
         const s = get();
         const prevLevel = levelForXp(s.xp);
         const xp = s.xp + XP_PER_CARD;
-        const updates: Partial<AppState> = { xp, cardsRead: s.cardsRead + 1 };
+        const updates: Partial<AppState> = { xp, learningXp: s.learningXp + XP_PER_CARD, cardsRead: s.cardsRead + 1 };
         const celebrations: Celebration[] = [];
         if (levelForXp(xp) > prevLevel) {
           celebrations.push({ kind: "levelup", level: levelForXp(xp) });
@@ -287,20 +288,11 @@ export const useApp = create<AppState>()(
         if (s.completedLessons.includes(lessonId)) return;
 
         const celebrations: Celebration[] = [];
-        let { streak, bestStreak, lastActiveDay } = s;
-        const today = todayKey();
-
-        // Streak logic: completing a lesson counts as daily activity.
-        if (lastActiveDay !== today) {
-          streak = lastActiveDay === yesterdayKey() ? streak + 1 : 1;
-          bestStreak = Math.max(bestStreak, streak);
-          lastActiveDay = today;
-          celebrations.push({ kind: "streak", streak });
-        }
-
+        const activity = markActivity(toProgressPayload(s), todayKey());
+        const { streak, bestStreak, lastActiveDay } = activity;
+        if (activity.dailyBonusDays.length > s.dailyBonusDays.length) celebrations.push({ kind: "streak", streak });
         const prevLevel = levelForXp(s.xp);
-        const xp =
-          s.xp + XP_PER_LESSON + (celebrations.length > 0 ? XP_PER_STREAK_DAY : 0);
+        const xp = activity.xp + XP_PER_LESSON;
         const completedLessons = [...s.completedLessons, lessonId];
         const newLevel = levelForXp(xp);
         if (newLevel > prevLevel) {
@@ -316,7 +308,9 @@ export const useApp = create<AppState>()(
         }
 
         set({
+          ...activity,
           xp,
+          learningXp: s.learningXp + XP_PER_LESSON,
           completedLessons,
           streak,
           bestStreak,
@@ -365,6 +359,7 @@ export const useApp = create<AppState>()(
 
         set({
           xp,
+          learningXp: s.learningXp + (correct ? XP_PER_QUIZ : 0),
           quizAnswers,
           unlockedAchievements: [
             ...s.unlockedAchievements,
@@ -405,6 +400,8 @@ export const useApp = create<AppState>()(
 
         set({
           xp,
+          learningXp: s.learningXp + (firstAnswer ? XP_PER_INVENTORY : 0),
+          inventoryUpdatedAt: { ...s.inventoryUpdatedAt, [itemId]: Math.max(Date.now(), (s.inventoryUpdatedAt[itemId] ?? 0) + 1) },
           inventory,
           unlockedAchievements: [
             ...s.unlockedAchievements,
@@ -431,60 +428,32 @@ export const useApp = create<AppState>()(
 
       setProgressUserId: (id) => set({ progressUserId: id }),
 
+      projectAction: (id, action) => {
+        const s = get();
+        set(actOnProject(toProgressPayload(s), id, action));
+        scheduleSync();
+      },
       applyServerProgress: (progress) => {
         const s = get();
         const merged = mergeProgress(toProgressPayload(s), progress);
-        set({
-          xp: merged.xp,
-          cardsRead: merged.cardsRead,
-          completedLessons: merged.completedLessons,
-          streak: merged.streak,
-          bestStreak: merged.bestStreak,
-          lastActiveDay: merged.lastActiveDay,
-          unlockedAchievements: merged.unlockedAchievements,
-          followedTopics: merged.followedTopics,
-          quizAnswers: merged.quizAnswers,
-          inventory: merged.inventory,
-          onboarded: s.onboarded || merged.followedTopics.length > 0,
-        });
+        set({ ...merged, onboarded: s.onboarded || merged.followedTopics.length > 0 });
       },
-
       resetProgress: () => {
         const s = get();
-        set({
-          xp: 0,
-          cardsRead: 0,
-          completedLessons: [],
-          streak: 0,
-          bestStreak: 0,
-          lastActiveDay: null,
-          unlockedAchievements: [],
-          celebrations: [],
-          quizAnswers: {},
-        });
-        // The server merge only ever grows, so a true reset must also clear
-        // the account's stored progress — otherwise it would sync right back.
-        if (s.user) void deleteServerProgress().catch(() => {});
+        const id = crypto.randomUUID();
+        set({ ...resetSnapshot(toProgressPayload(s), id), celebrations: [], pendingReset: s.progressUserId ? { id, generation: s.pendingReset?.generation ?? s.generation } : null });
+        scheduleSync();
       },
     }),
     {
       name: "byterush-store",
-      partialize: (s) => ({
-        onboarded: s.onboarded,
-        followedTopics: s.followedTopics,
-        xp: s.xp,
-        cardsRead: s.cardsRead,
-        completedLessons: s.completedLessons,
-        streak: s.streak,
-        bestStreak: s.bestStreak,
-        lastActiveDay: s.lastActiveDay,
-        unlockedAchievements: s.unlockedAchievements,
-        soundEnabled: s.soundEnabled,
-        quizAnswers: s.quizAnswers,
-        inventory: s.inventory,
-        user: s.user,
-        progressUserId: s.progressUserId,
-      }),
+      version: 2,
+      migrate: (persisted) => {
+        const old = persisted as AppState;
+        return { ...old, ...normalizeProgress(old), pendingReset: old.pendingReset ?? null, pendingAttach: old.pendingAttach ?? null };
+      },
+      partialize: (s) => ({ ...toProgressPayload(s), onboarded: s.onboarded, soundEnabled: s.soundEnabled,
+        user: s.user, progressUserId: s.progressUserId, pendingAttach: s.pendingAttach, pendingReset: s.pendingReset }),
       onRehydrateStorage: () => (state) => {
         if (state) {
           setMuted(!state.soundEnabled);

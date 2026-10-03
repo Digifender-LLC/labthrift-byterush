@@ -1,0 +1,92 @@
+{
+  "id": "immich-first-weekend",
+  "title": "Immich: first weekend",
+  "summary": "Docker Compose on the lab box, open the web UI, point the phone at LAN. Mark installed when uploads work.",
+  "sourceGuide": "https://labthrift.com/guides/immich",
+  "topics": [
+    "photos",
+    "immich",
+    "docker"
+  ],
+  "recommendsIfInterested": [
+    "immich"
+  ],
+  "recommendsIfInstalled": [],
+  "startBeat": "start",
+  "beats": {
+    "start": {
+      "id": "start",
+      "body": "Immich is a photo library you run. This weekend: get Compose up and one phone uploading. Not a full migration yet.",
+      "continue": "prereq"
+    },
+    "prereq": {
+      "id": "prereq",
+      "body": "You need Docker + Compose on the lab box, a disk with room, and the box reachable on LAN. No public expose this weekend.",
+      "choices": [
+        {
+          "label": "Docker is ready",
+          "next": "compose"
+        },
+        {
+          "label": "I still need Docker",
+          "next": "need-docker"
+        }
+      ]
+    },
+    "need-docker": {
+      "id": "need-docker",
+      "body": "Install Docker Engine from the official docs for your OS, then docker compose version. Come back when that prints a version.",
+      "continue": "compose"
+    },
+    "compose": {
+      "id": "compose",
+      "body": "Clone or copy Immich's official docker-compose + .env. Set UPLOAD_LOCATION to a big disk path. docker compose up -d. Wait for healthy.",
+      "continue": "web"
+    },
+    "web": {
+      "id": "web",
+      "body": "Open http://lab-address:2283 (or the port in the compose file). Create the admin user. Do not put this on the public internet yet.",
+      "continue": "phone"
+    },
+    "phone": {
+      "id": "phone",
+      "body": "Install the Immich app. Server URL is your LAN IP and port. Turn on backup for Camera. Watch a few photos land in the web UI.",
+      "choices": [
+        {
+          "label": "Uploads work — mark Immich installed",
+          "next": "done",
+          "setsStatus": [
+            {
+              "itemId": "immich",
+              "status": "installed"
+            },
+            {
+              "itemId": "photos",
+              "status": "installed"
+            }
+          ]
+        },
+        {
+          "label": "Still wrestling — leave as interested",
+          "next": "stuck",
+          "setsStatus": [
+            {
+              "itemId": "immich",
+              "status": "interested"
+            }
+          ]
+        }
+      ]
+    },
+    "stuck": {
+      "id": "stuck",
+      "body": "Check compose logs, disk space, and that the phone is on the same LAN. Leave it running overnight. Come back for Immich: make it better when uploads click.",
+      "end": true
+    },
+    "done": {
+      "id": "done",
+      "body": "Good. Photos are landing. The next guided project is Immich: make it better — storage, users, and not blowing the disk.",
+      "end": true
+    }
+  }
+}
