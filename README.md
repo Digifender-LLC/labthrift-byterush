@@ -107,3 +107,5 @@ docs/             # shared-passkeys.md: RP ID + preview-vs-prod rules
 ## Design documentation
 
 [Product, requirements and architecture documents](docs/design/README.md) cover the frontend, supporting backend and the Runs-to-ByteRush consolidation. Release evidence is tracked separately from design intent.
+
+[Universal completion roadmap](docs/ROADMAP.md) sequences work across all three products, with dependencies, acceptance criteria, and coverage of all 100 numbered requirements.
