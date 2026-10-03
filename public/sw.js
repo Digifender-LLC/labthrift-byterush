@@ -1,4 +1,4 @@
-/* ByteRush / Tech Dose service worker — bump CACHE_VERSION on each deploy. */
+/* ByteRush / Tech Dose service worker — build script derives the deployed cache version from all exported assets. */
 const CACHE_VERSION = "byterush-20261003-projects-v2";
 const SHELL_CACHE = `byterush-shell-${CACHE_VERSION}`;
 const STATIC_CACHE = `byterush-static-${CACHE_VERSION}`;
