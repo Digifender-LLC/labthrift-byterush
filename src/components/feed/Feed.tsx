@@ -9,6 +9,7 @@ import { playSwipe } from '@/lib/sounds';
 import { LessonView } from './LessonView';
 import { InventoryCard } from './InventoryCard';
 import { ProjectView } from './ProjectView';
+import { LegalLinks } from '@/components/LegalLinks';
 export { buildFeed } from '@/lib/feed';
 
 export function Feed() {
@@ -46,6 +47,7 @@ function FeedSession() {
     <p className="text-sm text-muted-foreground">Resume a project, explore all 17, or follow another topic.</p>
     <button onClick={()=>change('projects')} className="min-h-11 rounded-full bg-primary px-5 text-primary-foreground">Explore projects</button>
     <Link href="/topics" className="underline">Follow topics</Link>
+    <LegalLinks className="mt-2 max-w-sm" />
    </section>
   </div>
  </div>;
