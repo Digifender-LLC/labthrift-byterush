@@ -7,6 +7,7 @@ import { TOPICS } from "@/lib/content";
 import { useApp } from "@/lib/store";
 import { playTap, playComplete } from "@/lib/sounds";
 import { Button } from "@/components/ui/button";
+import { LegalLinks } from "@/components/LegalLinks";
 import { cn } from "@/lib/utils";
 
 export function Onboarding() {
@@ -55,6 +56,7 @@ export function Onboarding() {
             >
               Let&apos;s go
             </Button>
+            <LegalLinks className="mt-1" />
           </motion.div>
         ) : (
           <motion.div
@@ -129,6 +131,7 @@ export function Onboarding() {
                       followedTopics.length > 1 ? "s" : ""
                     })`}
               </Button>
+              <LegalLinks className="mt-3" />
             </div>
           </motion.div>
         )}

@@ -23,6 +23,7 @@ import {
 } from "@/lib/store";
 import { useMounted } from "@/hooks/useMounted";
 import { BottomNav } from "@/components/BottomNav";
+import { LegalLinks } from "@/components/LegalLinks";
 import { CelebrationOverlay } from "@/components/CelebrationOverlay";
 import { AccountCard } from "@/components/profile/AccountCard";
 import { LabSection } from "@/components/profile/LabSection";
@@ -71,6 +72,7 @@ export function ProfileClient() {
     <div className="flex h-full flex-col">
       <div className="no-scrollbar flex-1 overflow-y-auto px-5 pb-24 pt-12">
         <h1 className="text-2xl font-extrabold">Your stats</h1>
+        <LegalLinks className="mb-4 mt-3" />
 
         {/* account (passkey sign-up / sign-in / signed-in) */}
         <AccountCard />
