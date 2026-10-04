@@ -62,7 +62,7 @@ Resolve `/guides/immich` and `/guides/prism`, preserving the imported source URL
 
 ### C02 Review the imported walkthrough content as learning material
 
-**Status:** Partial. The [catalog review](design/catalog-review.md) records all 17 projects (2 Pass, 11 Pass with notes, 4 fixed in the same change); Prism's scope decision and the Immich/Prism source comparison after C01 remain. **Owner:** ByteRush content and website editorial. **Dependency:** C01 for final link acceptance.
+**Status:** Partial. The [catalog review](design/catalog-review.md) records all 17 projects (2 Pass, 11 Pass with notes, 4 fixed in the same change); Prism was expanded to a full PhotoPrism walkthrough on 2026-10-04 (catalog now 179 nodes, 33 branches); comparing it and the Immich projects against their source guides remains once C01 publishes them. **Owner:** ByteRush content and website editorial. **Dependency:** C01 for final link acceptance.
 
 Review all 17 projects for agreement with their source guides, clear command prerequisites, explicit choices and completion wording, and Plan-specific labels. Preserve IDs, the six-project beginner sequence, all valid graph paths, and provenance. The imported Prism project is a short introductory stub: explicitly accept that limited scope or commission a full walkthrough as a separate content change. A content expansion must update count expectations and validation deliberately.
 
@@ -192,7 +192,7 @@ Keep commands alongside the code. ByteRush already has `npm test`, `npm run lint
 | Shared SSO or inventory synchronization | Defer; accounts/databases remain independent | Record the boundary; adoption would require a new ADR, consent/ownership mapping, conflicts, migration, and recovery plan |
 | Plan module extraction | Defer unless needed for a concrete verified change | Document whether extraction is necessary for tests/CAS; avoid an unrelated rewrite |
 | Catalog lazy loading | Defer while the bundled catalog meets needs | Revisit on measured size/offline constraints; do not replace offline behavior without acceptance criteria |
-| Prism walkthrough expansion | Resolve through C02 | Explicitly accept its introduction scope or specify the new content and validation |
+| Prism walkthrough expansion | Adopted 2026-10-04: full PhotoPrism first-install walkthrough | `prism-intro` expanded with updated count tests; source comparison follows the C01 guide |
 | Commercial models, CMS, provisioning, monitoring, native apps | Outside this completion baseline | Do not count an excluded or speculative feature as missing approved functionality |
 
 Closing this task requires explicit dispositions, not implementation of every possible future feature. A decision that adopts new scope adds task IDs, dependencies, and acceptance criteria here before it can be marked complete.

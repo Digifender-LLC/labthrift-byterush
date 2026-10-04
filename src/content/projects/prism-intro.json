@@ -1,11 +1,12 @@
 {
   "id": "prism-intro",
-  "title": "Prism intro",
-  "summary": "Lighter photo library stub. Mark interested or installed when you try it.",
+  "title": "Prism: first install",
+  "summary": "PhotoPrism on the lab box with Docker Compose, LAN only: index a folder you already have and open it from your phone. Mark installed when it works.",
   "sourceGuide": "https://labthrift.com/guides/prism",
   "topics": [
     "photos",
-    "prism"
+    "prism",
+    "docker"
   ],
   "recommendsIfInterested": [
     "prism"
@@ -14,15 +15,19 @@
   "beats": {
     "start": {
       "id": "start",
-      "body": "Prism is the lighter photo path when Immich feels like too many containers. This walkthrough is a short introduction — enough to decide.",
+      "body": "Prism here means PhotoPrism: a photo library you run that browses and searches folders you already have. It starts lighter than Immich, with one app container and one database.\n\nThis walkthrough gets it running on the lab box, on your home network only.",
       "continue": "fit"
     },
     "fit": {
       "id": "fit",
-      "body": "You want a browsable library on the lab box and phone upload later. You do not need face clustering on day one.",
+      "body": "It suits you if your photos already live in folders and you want to browse and search them from any screen in the house. Face clustering and automatic phone backup can wait.",
       "choices": [
         {
-          "label": "Mark Prism interested",
+          "label": "Install it now",
+          "next": "prereq"
+        },
+        {
+          "label": "Mark Prism interested for later",
           "next": "interested",
           "setsStatus": [
             {
@@ -32,7 +37,7 @@
           ]
         },
         {
-          "label": "I already run it — mark installed",
+          "label": "I already run it — mark Prism and photos installed",
           "next": "installed",
           "setsStatus": [
             {
@@ -57,14 +62,112 @@
         }
       ]
     },
+    "prereq": {
+      "id": "prereq",
+      "body": "You need Docker with Compose on the lab box, about 4 GB of RAM plus 4 GB of swap, and the box reachable on your home network. SSH in from the couch for the commands that follow.",
+      "choices": [
+        {
+          "label": "Docker is ready",
+          "next": "folder"
+        },
+        {
+          "label": "I still need Docker",
+          "next": "need-docker"
+        }
+      ]
+    },
+    "need-docker": {
+      "id": "need-docker",
+      "body": "Install Docker Engine from the official Docker docs for your OS, then check it:\n\n```\ndocker compose version\n```\n\nCome back when that prints a version.",
+      "continue": "folder"
+    },
+    "folder": {
+      "id": "folder",
+      "body": "Pick the folder PhotoPrism will read, for example /srv/photos. It indexes your photos where they are and does not move them, so keep that folder on a disk with room and a backup.",
+      "continue": "download"
+    },
+    "download": {
+      "id": "download",
+      "body": "Make a folder for PhotoPrism and download its official Compose file:\n\n```\nmkdir -p ~/photoprism && cd ~/photoprism\nwget https://dl.photoprism.app/docker/compose.yaml\n```",
+      "continue": "edit"
+    },
+    "edit": {
+      "id": "edit",
+      "body": "Open the file:\n\n```\nnano compose.yaml\n```\n\nSet PHOTOPRISM_ADMIN_PASSWORD to a long password (8 characters minimum). Change the database password too: MARIADB_PASSWORD and PHOTOPRISM_DATABASE_PASSWORD must match. Under volumes, change \"~/Pictures:/photoprism/originals\" so the left side is your photo folder. Do this before the first start; these passwords cannot be changed in this file afterwards.",
+      "continue": "up"
+    },
+    "up": {
+      "id": "up",
+      "body": "Start it and check both containers are running:\n\n```\ndocker compose up -d\ndocker compose ps\n```\n\nThe first start can take a minute.",
+      "continue": "web"
+    },
+    "web": {
+      "id": "web",
+      "body": "On a laptop on house Wi-Fi, open http://lab-address:2342 and sign in as admin with the password you set. Keep it on your home network: no port forwarding.",
+      "continue": "index"
+    },
+    "index": {
+      "id": "index",
+      "body": "In PhotoPrism, open Library, then Index, and start indexing. A big folder takes a while; thumbnails fill in as it goes.",
+      "choices": [
+        {
+          "label": "Photos show up",
+          "next": "phone"
+        },
+        {
+          "label": "The library is empty",
+          "next": "empty"
+        }
+      ]
+    },
+    "empty": {
+      "id": "empty",
+      "body": "An empty library usually means the originals path is wrong. Check what PhotoPrism sees:\n\n```\ndocker compose exec photoprism ls /photoprism/originals\n```\n\nIf your folders are missing, fix the volumes line in compose.yaml, run docker compose up -d again, and index again.",
+      "continue": "index"
+    },
+    "phone": {
+      "id": "phone",
+      "body": "On your phone, on house Wi-Fi, open http://lab-address:2342 in the browser and sign in. You can add it to the home screen. Try the Upload button with a couple of photos and watch them appear in the library.",
+      "choices": [
+        {
+          "label": "It works — mark Prism and photos installed",
+          "next": "installed",
+          "setsStatus": [
+            {
+              "itemId": "prism",
+              "status": "installed"
+            },
+            {
+              "itemId": "photos",
+              "status": "installed"
+            }
+          ]
+        },
+        {
+          "label": "Still wrestling — keep Prism as interested",
+          "next": "stuck",
+          "setsStatus": [
+            {
+              "itemId": "prism",
+              "status": "interested"
+            }
+          ]
+        }
+      ]
+    },
+    "stuck": {
+      "id": "stuck",
+      "body": "Usual causes: the wrong lab address, the containers not running (docker compose ps), or the lab box's firewall blocking port 2342 from your home network. Replay this walkthrough when you are ready.",
+      "end": true
+    },
     "interested": {
       "id": "interested",
-      "body": "Noted. Follow the Prism docs for your OS when you have an evening. Prefer LAN-only until you know the auth story.",
+      "body": "Noted. Replay this walkthrough when you have an evening. Keep it on your home network until you know how you would sign in from outside.",
       "end": true
     },
     "installed": {
       "id": "installed",
-      "body": "Good. Keep a second copy of the library off the box — same rule as any photo pile.",
+      "body": "Good. Keep a second copy of the photo folder off the box — same rule as any photo pile.",
       "end": true
     },
     "skip": {
