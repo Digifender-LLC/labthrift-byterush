@@ -62,7 +62,7 @@ Resolve `/guides/immich` and `/guides/prism`, preserving the imported source URL
 
 ### C02 Review the imported walkthrough content as learning material
 
-**Status:** Open for editorial review; structural graph checks already pass. **Owner:** ByteRush content and website editorial. **Dependency:** C01 for final link acceptance.
+**Status:** Partial. The [catalog review](design/catalog-review.md) records all 17 projects (2 Pass, 11 Pass with notes, 4 fixed in the same change); Prism's scope decision and the Immich/Prism source comparison after C01 remain. **Owner:** ByteRush content and website editorial. **Dependency:** C01 for final link acceptance.
 
 Review all 17 projects for agreement with their source guides, clear command prerequisites, explicit choices and completion wording, and Plan-specific labels. Preserve IDs, the six-project beginner sequence, all valid graph paths, and provenance. The imported Prism project is a short introductory stub: explicitly accept that limited scope or commission a full walkthrough as a separate content change. A content expansion must update count expectations and validation deliberately.
 
@@ -96,7 +96,7 @@ Test registration, sign-in, sign-out, anonymous attachment, switching account A 
 
 ### B03 Close learning and recovery regression coverage
 
-**Status:** Partial; core graph/feed/reward/sync tests already pass. **Owner:** ByteRush frontend/backend and QA. **Dependency:** B02 for the complete signed-in device journey; C02 for changed content.
+**Status:** Partial. Every automatable scenario below now has a passing test, mapped in [test coverage](design/test-coverage.md); the signed-in device journey waits on B02. **Owner:** ByteRush frontend/backend and QA. **Dependency:** B02 for the complete signed-in device journey; C02 for changed content.
 
 Compare the existing tests with every contract in FRD/SRS. Fill meaningful gaps for lesson/quiz preservation, topic/filter and gear relevance, stable session ordering, all-project discovery, local-calendar day boundaries, shared daily bonuses, reset/reconnect, and service-worker upgrades with loaded projects offline. Reuse existing migration, reward-set, cursor/history, concurrent-write, and stale-reset fixtures rather than recreating equivalent tests.
 
@@ -174,7 +174,7 @@ Test UTC-day/path/kind bucketing, normalization and length limits, eligible meth
 
 ### X01 Establish repeatable checks for each repository
 
-**Status:** Open delivery support; automation is a recommended implementation choice. **Owner:** maintainers of all three repositories. **Dependency:** B03, P01–P04, W01–W03 as their checks become available.
+**Status:** Partial. ByteRush chose CI: `.github/workflows/ci.yml` runs lint, Worker typecheck, tests and build on every pull request, documented in [test coverage](design/test-coverage.md). Plan and the website remain open. **Owner:** maintainers of all three repositories. **Dependency:** B03, P01–P04, W01–W03 as their checks become available.
 
 Keep commands alongside the code. ByteRush already has `npm test`, `npm run lint`, `npm run typecheck:worker`, `npm run build`, and `node tests/sync-integration.mjs` for a running local preview. The integration script's `--remote` option targets live ByteRush and must remain an explicit production test operation. Plan and the website need documented, repeatable checks for the contracts above; their package scripts currently do not expose test suites.
 

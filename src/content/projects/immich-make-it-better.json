@@ -32,7 +32,7 @@
       "body": "Add one household user if someone else will upload. Shared albums beat one giant admin pile.",
       "choices": [
         {
-          "label": "Done for now",
+          "label": "Done for now — keep Immich marked installed",
           "next": "done",
           "setsStatus": [
             {

@@ -1,0 +1,23 @@
+# Local release gate for ByteRush (roadmap X01). Uses no secrets and never touches production:
+# the live sync check (`node tests/sync-integration.mjs --remote`) stays a manual release step.
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck:worker
+      - run: npm test
+      - run: npm run build
