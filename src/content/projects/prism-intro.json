@@ -1,11 +1,12 @@
 {
   "id": "prism-intro",
-  "title": "Prism intro",
-  "summary": "Lighter photo library stub. Mark interested or installed when you try it.",
+  "title": "Prism: first install",
+  "summary": "PhotoPrism on the old PC, read-only and house network only: browse and search the photos already in the house share from a laptop or phone. Mark installed when it works.",
   "sourceGuide": "https://labthrift.com/guides/prism",
   "topics": [
     "photos",
-    "prism"
+    "prism",
+    "docker"
   ],
   "recommendsIfInterested": [
     "prism"
@@ -14,15 +15,19 @@
   "beats": {
     "start": {
       "id": "start",
-      "body": "Prism is the lighter photo path when Immich feels like too many containers. This walkthrough is a short introduction — enough to decide.",
+      "body": "Prism here means PhotoPrism: a photo library you run. It reads the photo folder you already copy into and gives you a timeline, search and a map in the browser. One container plus a database, house network only.",
       "continue": "fit"
     },
     "fit": {
       "id": "fit",
-      "body": "You want a browsable library on the lab box and phone upload later. You do not need face clustering on day one.",
+      "body": "Pick it if the files are the library and you want a nicer way to browse them. This walkthrough runs it read-only: it can look at the house share but never change it. Want automatic phone upload and face search on day one? That is Immich.",
       "choices": [
         {
-          "label": "Mark Prism interested",
+          "label": "Install it now",
+          "next": "prereq"
+        },
+        {
+          "label": "Mark Prism interested for later",
           "next": "interested",
           "setsStatus": [
             {
@@ -32,7 +37,7 @@
           ]
         },
         {
-          "label": "I already run it — mark installed",
+          "label": "I already run it — mark Prism and photos installed",
           "next": "installed",
           "setsStatus": [
             {
@@ -57,14 +62,112 @@
         }
       ]
     },
+    "prereq": {
+      "id": "prereq",
+      "body": "You need the old PC on Debian or Ubuntu Server, SSH from the couch, a house share with photos in it, and at least 2 CPU cores, 3 GB of RAM and 4 GB of swap. Check from SSH:\n\n```\nfree -h\ndf -h /srv/share\n```\n\nThe Swap line should say at least 4.0G.",
+      "choices": [
+        {
+          "label": "Docker is ready",
+          "next": "download"
+        },
+        {
+          "label": "I still need Docker",
+          "next": "need-docker"
+        }
+      ]
+    },
+    "need-docker": {
+      "id": "need-docker",
+      "body": "Download Docker's script, read it, then run it:\n\n```\ncurl -fsSL https://get.docker.com -o ~/get-docker.sh\nless ~/get-docker.sh\nsudo sh ~/get-docker.sh\n```\n\nCheck that Compose answers with a version number:\n\n```\nsudo docker compose version\n```",
+      "continue": "download"
+    },
+    "download": {
+      "id": "download",
+      "body": "Make a folder for PhotoPrism, download its official Compose file and open it:\n\n```\nmkdir ~/photoprism && cd ~/photoprism\nwget https://dl.photoprism.app/docker/compose.yaml\nnano compose.yaml\n```",
+      "continue": "edit"
+    },
+    "edit": {
+      "id": "edit",
+      "body": "All settings live in this one file. Change: PHOTOPRISM_ADMIN_PASSWORD to a real password, 8 characters or more. PHOTOPRISM_SITE_URL to the PC's address, like \"http://192.168.1.50:2342/\". PHOTOPRISM_DATABASE_PASSWORD and MARIADB_PASSWORD to the same new password, and MARIADB_ROOT_PASSWORD too. PHOTOPRISM_READONLY to \"true\". Under volumes, change ~/Pictures:/photoprism/originals to /srv/share:/photoprism/originals.\n\nKeep the indentation. Set the passwords before the first start: the database keeps its first one. Save with Ctrl+O, Enter, Ctrl+X.",
+      "continue": "up"
+    },
+    "up": {
+      "id": "up",
+      "body": "Start it and check both containers:\n\n```\nsudo docker compose up -d\nsudo docker compose ps\n```\n\nWait until photoprism and mariadb both say Up. If the page won't load later, read the log:\n\n```\nsudo docker compose logs photoprism --tail 50\n```",
+      "continue": "web"
+    },
+    "web": {
+      "id": "web",
+      "body": "On a laptop on house Wi-Fi, open http://192.168.1.50:2342 with your own address and sign in as admin. Forgot the password after the first start? Editing the file won't help; in ~/photoprism run:\n\n```\nsudo docker compose exec photoprism photoprism passwd admin\n```",
+      "continue": "index"
+    },
+    "index": {
+      "id": "index",
+      "body": "Go to Library, then Index, and press Start. On an old PC the first pass over a big folder can take hours; let it run overnight. When new photos land in the share later, press Start again.",
+      "choices": [
+        {
+          "label": "Photos show up",
+          "next": "phone"
+        },
+        {
+          "label": "The library is empty",
+          "next": "empty"
+        }
+      ]
+    },
+    "empty": {
+      "id": "empty",
+      "body": "An empty library usually means the originals line points at the wrong folder. Check what PhotoPrism sees:\n\n```\nsudo docker compose exec photoprism ls /photoprism/originals\n```\n\nIf your folders are missing, fix the volumes line in compose.yaml, run sudo docker compose up -d, and index again.",
+      "continue": "index"
+    },
+    "phone": {
+      "id": "phone",
+      "body": "On the same house Wi-Fi, open the same address in the phone's browser and sign in. Browse, search and the map all work there. The phone still adds photos by copying the camera roll to the share, then you index again; read-only mode turns off PhotoPrism's own uploads on purpose.",
+      "choices": [
+        {
+          "label": "It works — mark Prism and photos installed",
+          "next": "keep",
+          "setsStatus": [
+            {
+              "itemId": "prism",
+              "status": "installed"
+            },
+            {
+              "itemId": "photos",
+              "status": "installed"
+            }
+          ]
+        },
+        {
+          "label": "Still wrestling — keep Prism as interested",
+          "next": "stuck",
+          "setsStatus": [
+            {
+              "itemId": "prism",
+              "status": "interested"
+            }
+          ]
+        }
+      ]
+    },
+    "keep": {
+      "id": "keep",
+      "body": "Keep it on the house network: don't forward port 2342. Your photos are already covered by the house-folder backup; copy PhotoPrism's own folder too so you don't have to re-index:\n\n```\nsudo rsync -a ~/photoprism/storage/ /mnt/backup/photoprism-storage/\n```\n\nTo update later, read the release notes, then in ~/photoprism:\n\n```\nsudo docker compose pull && sudo docker compose up -d\n```",
+      "continue": "installed"
+    },
+    "stuck": {
+      "id": "stuck",
+      "body": "Usual causes: the wrong address, a container not Up (sudo docker compose ps), or the log naming a bad line in compose.yaml (sudo docker compose logs photoprism --tail 50). Replay this walkthrough when you are ready.",
+      "end": true
+    },
     "interested": {
       "id": "interested",
-      "body": "Noted. Follow the Prism docs for your OS when you have an evening. Prefer LAN-only until you know the auth story.",
+      "body": "Noted. Replay this walkthrough when you have an evening. Keep it on the house network when you do.",
       "end": true
     },
     "installed": {
       "id": "installed",
-      "body": "Good. Keep a second copy of the library off the box — same rule as any photo pile.",
+      "body": "Good. Leave read-only mode on and don't point Prism and Immich at the same folder until you have picked one.",
       "end": true
     },
     "skip": {

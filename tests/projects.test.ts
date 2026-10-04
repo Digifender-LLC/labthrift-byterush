@@ -9,7 +9,8 @@ import { buildFeed } from '../src/lib/feed';
 const day='2026-10-03';
 const start=(id:string)=>actOnProject(EMPTY_PROGRESS,id,{type:'resume'},day,1);
 
-test('all 17 graphs retain 168 reachable nodes and 30 branching points; every node reaches an end',()=>{
+// 168 nodes / 30 branches at the Runs import; prism-intro grew from 5/1 to 16/4 as a full walkthrough (C02).
+test('all 17 graphs have 179 reachable nodes and 33 branching points; every node reaches an end',()=>{
  let nodes=0,branches=0;
  assert.equal(PROJECTS.length,17);
  for(const p of PROJECTS){
@@ -28,7 +29,7 @@ test('all 17 graphs retain 168 reachable nodes and 30 branching points; every no
   assert.ok(PROJECT_TOPICS[p.id].length);for(const t of PROJECT_TOPICS[p.id])assert.ok(TOPICS.some(topic=>topic.id===t));
   assert.equal(new URL(p.sourceGuide).hostname,'labthrift.com');
  }
- assert.equal(nodes,168);assert.equal(branches,30);assert.equal(INVENTORY_ITEMS.length,19);
+ assert.equal(nodes,179);assert.equal(branches,33);assert.equal(INVENTORY_ITEMS.length,19);
 });
 
 test('branch choice, backtracking, alternate choice and reload keep valid path and unique rewards',()=>{

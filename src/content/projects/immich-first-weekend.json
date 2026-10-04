@@ -21,7 +21,7 @@
     },
     "prereq": {
       "id": "prereq",
-      "body": "You need Docker + Compose on the lab box, a disk with room, and the box reachable on LAN. No public expose this weekend.",
+      "body": "You need at least 6 GB of RAM (8 GB is comfortable), 2 CPU cores, Docker with Compose, room on a disk for the photos plus 10–20% for thumbnails, and the box reachable on house Wi-Fi. Check from SSH:\n\n```\nfree -h\ndf -h\n```\n\nNo public exposure this weekend.",
       "choices": [
         {
           "label": "Docker is ready",
@@ -35,22 +35,22 @@
     },
     "need-docker": {
       "id": "need-docker",
-      "body": "Install Docker Engine from the official docs for your OS, then docker compose version. Come back when that prints a version.",
+      "body": "Download Docker's script, read it, then run it:\n\n```\ncurl -fsSL https://get.docker.com -o ~/get-docker.sh\nless ~/get-docker.sh\nsudo sh ~/get-docker.sh\n```\n\nCheck that both parts answer with a version number:\n\n```\nsudo docker version\nsudo docker compose version\n```\n\nIt is docker compose with a space; the old docker-compose with a dash is not supported.",
       "continue": "compose"
     },
     "compose": {
       "id": "compose",
-      "body": "Clone or copy Immich's official docker-compose + .env. Set UPLOAD_LOCATION to a big disk path. docker compose up -d. Wait for healthy.",
+      "body": "Get Immich's two files for the current release and open the settings:\n\n```\nmkdir ~/immich-app && cd ~/immich-app\nwget -O docker-compose.yml https://github.com/immich-app/immich/releases/latest/download/docker-compose.yml\nwget -O .env https://github.com/immich-app/immich/releases/latest/download/example.env\nnano .env\n```\n\nSet UPLOAD_LOCATION to a path on the big disk, like /srv/photos/immich. Set DB_PASSWORD to a long mix of letters and numbers. Uncomment TZ and set your time zone. Then start it and wait until the containers say healthy:\n\n```\nsudo docker compose up -d\nsudo docker compose ps\n```",
       "continue": "web"
     },
     "web": {
       "id": "web",
-      "body": "Open http://lab-address:2283 (or the port in the compose file). Create the admin user. Do not put this on the public internet yet.",
+      "body": "From a laptop on house Wi-Fi, open http://192.168.1.50:2283 with your own address. The first account you create is the admin: use a real password and write it down somewhere that is not the old PC. Don't forward port 2283 on the router.",
       "continue": "phone"
     },
     "phone": {
       "id": "phone",
-      "body": "Install the Immich app. Server URL is your LAN IP and port. Turn on backup for Camera. Watch a few photos land in the web UI.",
+      "body": "Install the Immich app. For the server URL, type the same http://address:2283 and log in. Open the backup screen (the cloud icon), pick the camera album and turn backup on. Take one test photo and watch it show up on the web page. Don't delete anything from the phone yet.",
       "choices": [
         {
           "label": "Uploads work — mark Immich installed",
@@ -80,7 +80,7 @@
     },
     "stuck": {
       "id": "stuck",
-      "body": "Check compose logs, disk space, and that the phone is on the same LAN. Leave it running overnight. Come back for Immich: make it better when uploads click.",
+      "body": "Check that every container is up, and read the server log if one keeps restarting:\n\n```\nsudo docker compose ps\nsudo docker compose logs immich-server --tail 50\n```\n\nAlso check disk space and that the phone is on the same house Wi-Fi. Come back for Immich: make it better when uploads click.",
       "end": true
     },
     "done": {
