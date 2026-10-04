@@ -51,7 +51,9 @@ export function ProjectView({project,active,onSkip,onNext}:{project:Project;acti
      {step.end&&<><p className="text-sm text-white/60">Finishing records this walkthrough as read. Your gear only changes when you explicitly choose a gear status.</p><button className={`${button} bg-sky-400 text-slate-950`} onClick={()=>act({type:'finish'})}>Finish walkthrough</button></>}
     </div>
    </>}
-   <a className="mt-6 block text-xs text-sky-300 underline" href={project.sourceGuide} target="_blank" rel="noreferrer">{sourceUnavailable ? "Source guide · currently unavailable" : "Source guide · Labthrift"}</a>
+   {sourceUnavailable
+    ? <p className="mt-6 text-xs text-white/45">Source guide · not yet published on Labthrift</p>
+    : <a className="mt-6 block text-xs text-sky-300 underline" href={project.sourceGuide} target="_blank" rel="noreferrer">Source guide · Labthrift</a>}
   </div>
   <div className="shrink-0 border-t border-white/10 pt-3">
    <p role="status" aria-live="polite" className="min-h-5 text-xs text-emerald-300">{reward}</p>
