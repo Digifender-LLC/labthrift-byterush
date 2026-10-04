@@ -54,7 +54,7 @@ Reconcile stale release-language and links across the 27 documents, READMEs, dep
 
 ### C01 Restore the two missing source guide destinations
 
-**Status:** Partial. `/guides/immich` and its Markdown twin are written in [labthrift#4](https://github.com/zemdregon/labthrift/pull/4) and await deploy. `/guides/prism` awaits an editorial decision on which app it covers. **Owner:** website editorial, with ByteRush integration review. **Dependency:** source-guide inventory in the merge receipt.
+**Status:** Partial; written, awaiting deploy. `/guides/immich` and `/guides/prism` (PhotoPrism, per Ender's 2026-10-04 decision) and their Markdown twins are in [labthrift#4](https://github.com/zemdregon/labthrift/pull/4). C01 closes when they are live and ByteRush links them again. **Owner:** website editorial, with ByteRush integration review. **Dependency:** source-guide inventory in the merge receipt.
 
 Resolve `/guides/immich` and `/guides/prism`, preserving the imported source URLs and provenance. Prefer substantive guides and matching Markdown twins at those destinations. If the editorial decision is to use another canonical guide or retain an unavailable guide, record that decision and explicitly revise the continuity requirement; do not silently count a 404 or a placeholder as complete.
 
@@ -192,7 +192,7 @@ Keep commands alongside the code. ByteRush already has `npm test`, `npm run lint
 | Shared SSO or inventory synchronization | Defer; accounts/databases remain independent | Record the boundary; adoption would require a new ADR, consent/ownership mapping, conflicts, migration, and recovery plan |
 | Plan module extraction | Defer unless needed for a concrete verified change | Document whether extraction is necessary for tests/CAS; avoid an unrelated rewrite |
 | Catalog lazy loading | Defer while the bundled catalog meets needs | Revisit on measured size/offline constraints; do not replace offline behavior without acceptance criteria |
-| Prism walkthrough expansion | Resolve through C02 | Explicitly accept its introduction scope or specify the new content and validation |
+| Prism walkthrough expansion | Resolve through C02; Prism is PhotoPrism (decided 2026-10-04) | Explicitly accept its introduction scope or specify the new content and validation |
 | Commercial models, CMS, provisioning, monitoring, native apps | Outside this completion baseline | Do not count an excluded or speculative feature as missing approved functionality |
 
 Closing this task requires explicit dispositions, not implementation of every possible future feature. A decision that adopts new scope adds task IDs, dependencies, and acceptance criteria here before it can be marked complete.
