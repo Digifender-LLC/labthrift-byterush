@@ -62,7 +62,7 @@ Resolve `/guides/immich` and `/guides/prism`, preserving the imported source URL
 
 ### C02 Review the imported walkthrough content as learning material
 
-**Status:** Partial. The [catalog review](design/catalog-review.md) records all 17 projects (2 Pass, 11 Pass with notes, 4 fixed in the same change); Prism's scope decision and the Immich/Prism source comparison after C01 remain. **Owner:** ByteRush content and website editorial. **Dependency:** C01 for final link acceptance.
+**Status:** Partial. The [catalog review](design/catalog-review.md) records all 17 projects (2 Pass, 11 Pass with notes, 4 fixed in the same change); Prism is PhotoPrism (decided 2026-10-04); the Immich/Prism source comparison against the new guides remains. **Owner:** ByteRush content and website editorial. **Dependency:** C01 for final link acceptance.
 
 Review all 17 projects for agreement with their source guides, clear command prerequisites, explicit choices and completion wording, and Plan-specific labels. Preserve IDs, the six-project beginner sequence, all valid graph paths, and provenance. The imported Prism project is a short introductory stub: explicitly accept that limited scope or commission a full walkthrough as a separate content change. A content expansion must update count expectations and validation deliberately.
 
@@ -174,7 +174,7 @@ Test UTC-day/path/kind bucketing, normalization and length limits, eligible meth
 
 ### X01 Establish repeatable checks for each repository
 
-**Status:** Partial. ByteRush chose CI: `.github/workflows/ci.yml` runs lint, Worker typecheck, tests and build on every pull request, documented in [test coverage](design/test-coverage.md). Plan and the website remain open. **Owner:** maintainers of all three repositories. **Dependency:** B03, P01–P04, W01–W03 as their checks become available.
+**Status:** Partial. ByteRush chose CI: `.github/workflows/ci.yml` runs lint, Worker typecheck, tests and build on every pull request, documented in [test coverage](design/test-coverage.md). The website has `npm test` and `npm run check [base-url]` as a documented manual release gate ([labthrift#4](https://github.com/zemdregon/labthrift/pull/4)). Plan remains open. **Owner:** maintainers of all three repositories. **Dependency:** B03, P01–P04, W01–W03 as their checks become available.
 
 Keep commands alongside the code. ByteRush already has `npm test`, `npm run lint`, `npm run typecheck:worker`, `npm run build`, and `node tests/sync-integration.mjs` for a running local preview. The integration script's `--remote` option targets live ByteRush and must remain an explicit production test operation. The website now has `npm test` and `npm run check [base-url]` ([labthrift#4](https://github.com/zemdregon/labthrift/pull/4)). Plan still needs documented, repeatable checks for the contracts above; its package scripts currently do not expose a test suite.
 
