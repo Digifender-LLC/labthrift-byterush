@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/cache-assets.mjs",
+    "build": "next build && node scripts/cache-assets.mjs && node scripts/verify-offline-shell.mjs",
     "start": "next start",
     "lint": "eslint",
     "cf:preview": "wrangler dev",

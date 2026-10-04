@@ -66,7 +66,7 @@ test('migration, two-device rewards, daily shared bonus, legacy client preservat
  assert.equal(migrated.xp,120);assert.deepEqual(migrated.projects,{});
  let a=start('first-ssh'),b=start('first-backup');
  a=actOnProject(a,'first-ssh',{type:'advance',next:PROJECT_BY_ID['first-ssh'].beats.start.continue!},day,2);
- b=actOnProject(b,'first-backup',{type:'advance',next:PROJECT_BY_ID['first-backup'].beats.start.continue!},day,3);
+ b=actOnProject(b,'first-backup',{type:'advance',next:PROJECT_BY_ID['first-backup'].beats.start.choices![0].next},day,3);
  const merged=mergeProgress(a,b);assert.equal(merged.xp,70);assert.equal(merged.rewardIds.length,2);assert.deepEqual(mergeProgress(a,b),mergeProgress(b,a));
  assert.equal(mergeProgress(merged,merged).xp,70);assert.equal(markActivity(merged,day).xp,70);
  assert.equal(mergeProgress({...v1,xp:70},merged).xp,70);

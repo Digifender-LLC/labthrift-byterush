@@ -99,7 +99,7 @@
     },
     "pick-immich": {
       "id": "pick-immich",
-      "body": "Noted. When you are ready, run Immich: first weekend. Docker on the lab box, phone app pointed at your LAN.",
+      "body": "Noted. When you are ready, open the Immich: first weekend walkthrough. Docker on the lab box, phone app pointed at your LAN.",
       "end": true
     },
     "pick-prism": {

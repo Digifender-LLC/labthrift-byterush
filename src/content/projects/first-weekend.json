@@ -93,7 +93,7 @@
     },
     "update": {
       "id": "update",
-      "body": "8. Still connected, update packages:\n\n```\nsudo apt update && sudo apt upgrade\n```\n\n```\nsudo = \"do this as the administrator for one command.\" It will ask your password again. Let it finish; reboots if it asks.\n```",
+      "body": "8. Still connected, update packages:\n\n```\nsudo apt update && sudo apt upgrade\n```\n\nsudo = \"do this as the administrator for one command.\" It will ask your password again. Let it finish; reboots if it asks.",
       "milestone": true,
       "continue": "leave"
     },
@@ -120,7 +120,7 @@
     },
     "ssh-checkbox": {
       "id": "ssh-checkbox",
-      "body": "During Ubuntu Server install, a checkbox for OpenSSH / SSH server appears.\n\nCheck it. That installs the program that listens for your couch login.\n\nMissed it? You can install later: sudo apt install openssh-server — covered again in the SSH run.",
+      "body": "During Ubuntu Server install, a checkbox for OpenSSH / SSH server appears.\n\nCheck it. That installs the program that listens for your couch login.\n\nMissed it? You can install later: sudo apt install openssh-server — covered again in SSH from the couch.",
       "continue": "net"
     },
     "celebrate-week": {

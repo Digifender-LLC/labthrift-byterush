@@ -17,10 +17,13 @@ bound to `labthrift.com` can be exercised from any subdomain:
 - `app.labthrift.com` (this app)
 - `plan.labthrift.com` (Labthrift Plan)
 
-so a passkey created on one can eventually sign in to the other, once their
-backends agree on a shared account store. Each app currently keeps its own
-users/credentials tables; the parent-domain RP ID is what keeps that future
-consolidation possible without re-enrolling anyone.
+**This is not single sign-on today.** ByteRush and Plan each keep their own
+users and credentials tables, so a ByteRush account does not sign you in to
+Plan and Plan needs its own sign-in. A passkey created on one could
+eventually sign in to the other only once their backends agree on a shared
+account store; the parent-domain RP ID is what keeps that future
+consolidation possible without re-enrolling anyone. No cross-product SSO
+design has been approved (see [release status](design/release-status.md)).
 
 The RP ID and allowed origins are Worker vars in `wrangler.jsonc`:
 
@@ -75,9 +78,11 @@ field anywhere in the schema (see `migrations/0001_init.sql`):
 - `users`: id + username
 - `credentials`: the passkey's public key, counter, transports
 - `sessions`: SHA-256 hashes of session tokens (never the tokens themselves)
-- `progress` / `quiz_answers` / `inventory`: learning progress, quiz history,
-  and the self-reported homelab gear profile
+- `progress` / `quiz_answers` / `inventory`: learning and project progress,
+  quiz history, and the self-reported homelab gear profile
 
 Anonymous use remains fully supported: without an account everything lives in
 `localStorage`, and on first sign-in that local progress is merged into the
 account. Switching to a different account replaces account-owned local learning state; signing out clears it before anonymous learning resumes. No Runs accounts or passkeys are imported.
+
+Open verification for sign-in and passkeys on real devices is tracked as B02 in the [roadmap](ROADMAP.md).

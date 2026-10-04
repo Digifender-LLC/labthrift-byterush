@@ -90,7 +90,7 @@
     },
     "denied": {
       "id": "denied",
-      "body": "Permission denied = wrong user or password.\n\nUse the user you created at install — not Administrator, not root (unless you set a root password on purpose), not pi unless you named it pi.",
+      "body": "Permission denied = wrong user or password.\n\nUse the user you created at install — not Administrator, not root, not pi unless you named it pi.",
       "continue": "denied-tips"
     },
     "denied-tips": {

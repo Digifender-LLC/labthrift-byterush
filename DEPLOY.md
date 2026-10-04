@@ -13,10 +13,12 @@ A static Next.js export (`./out`) **plus a Worker script and a D1 database**:
   `localStorage`.
 - `worker/index.ts` (Hono) owns `/api/*`: passkey (WebAuthn) registration and
   sign-in, cookie sessions, and progress sync (XP, streaks, lessons,
-  achievements, quiz answers, homelab inventory) backed by **D1**.
+  guided projects, achievements, quiz answers, homelab inventory, reset
+  generations) backed by **D1**.
 - Auth is username + passkey only — no email, no password, no PII. The
-  WebAuthn RP ID is the parent domain `labthrift.com` so passkeys can be
-  shared with `plan.labthrift.com` later; see
+  WebAuthn RP ID is the parent domain `labthrift.com`, which keeps future
+  passkey sharing with `plan.labthrift.com` possible. Today the two apps have
+  separate account stores, so a ByteRush account does not sign in to Plan; see
   [`docs/shared-passkeys.md`](./docs/shared-passkeys.md), including why the
   `workers.dev` preview can't run real ceremonies.
 
@@ -133,8 +135,11 @@ directory first.
   `{"user":null}` (JSON, not the 404 page) — proves the Worker script is
   routing.
 - On `/profile`, create an account (username + passkey), complete a lesson
-  and answer its quiz, then open the site in another browser and sign in —
-  the progress should follow you.
+  and answer its quiz, and advance one project step (Feed → Projects), then
+  open the site in another browser and sign in — the lesson, project
+  position, and XP should follow you.
+- Record what you verified in
+  [`docs/design/release-status.md`](./docs/design/release-status.md).
 - `https://tech-dose.<subdomain>.workers.dev/` — preview: pages and anonymous
   mode work; passkey ceremonies are expected to fail there (RP ID
   `labthrift.com` doesn't match `workers.dev` — see
