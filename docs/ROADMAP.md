@@ -62,7 +62,7 @@ Resolve `/guides/immich` and `/guides/prism`, preserving the imported source URL
 
 ### C02 Review the imported walkthrough content as learning material
 
-**Status:** Partial. The [catalog review](design/catalog-review.md) records all 17 projects (2 Pass, 11 Pass with notes, 4 fixed in the same change); Prism was expanded to a full PhotoPrism walkthrough on 2026-10-04 (catalog now 179 nodes, 33 branches); it follows the new `/guides/prism` guide. Comparing the two Immich projects with `/guides/immich` remains. **Owner:** ByteRush content and website editorial. **Dependency:** C01 for final link acceptance.
+**Status:** Partial. The [catalog review](design/catalog-review.md) records all 17 projects (2 Pass, 11 Pass with notes, 4 fixed in the same change); Prism was expanded to a full PhotoPrism walkthrough on 2026-10-04 (catalog now 179 nodes, 33 branches); it follows the new `/guides/prism` guide, and both Immich projects now follow `/guides/immich`. Every project has been compared with its source guide. **Owner:** ByteRush content and website editorial. **Dependency:** C01 for final link acceptance.
 
 Review all 17 projects for agreement with their source guides, clear command prerequisites, explicit choices and completion wording, and Plan-specific labels. Preserve IDs, the six-project beginner sequence, all valid graph paths, and provenance. The imported Prism project is a short introductory stub: explicitly accept that limited scope or commission a full walkthrough as a separate content change. A content expansion must update count expectations and validation deliberately.
 

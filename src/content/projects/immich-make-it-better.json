@@ -19,17 +19,17 @@
     },
     "disk": {
       "id": "disk",
-      "body": "df -h the upload volume. If it shares the OS disk, plan a move before it fills. Thumbnails and ML models grow quietly.",
+      "body": "Check the photo disk once a week for the first month, using your own UPLOAD_LOCATION path:\n\n```\ndf -h /srv/photos\n```\n\nIf the photos share the system disk and it passes 80%, move them before it fills.",
       "continue": "backup-immich"
     },
     "backup-immich": {
       "id": "backup-immich",
-      "body": "Back up the library path and the Postgres volume (or Immich's documented dump). Phone upload is not a backup of Immich.",
+      "body": "Phone upload is not a backup of Immich. Immich writes a database dump every night into backups inside UPLOAD_LOCATION and keeps the last 14, so one copy of that whole folder to the backup USB covers photos and database:\n\n```\nsudo rsync -a --delete /srv/photos/immich/ /mnt/backup/immich/\n```",
       "continue": "users"
     },
     "users": {
       "id": "users",
-      "body": "Add one household user if someone else will upload. Shared albums beat one giant admin pile.",
+      "body": "If someone else in the house will upload, give them their own account: Administration, Users, Create user. Shared albums beat one giant admin pile.",
       "choices": [
         {
           "label": "Done for now — keep Immich marked installed",
@@ -60,7 +60,7 @@
     },
     "done": {
       "id": "done",
-      "body": "Immich stays installed. Next itch is usually remote access — that is a separate, careful project. Not today.",
+      "body": "Immich stays installed. Keep port 2283 closed on the router. To update, read the release notes first, then in ~/immich-app:\n\n```\nsudo docker compose pull && sudo docker compose up -d\n```\n\nRemote access is a separate, careful project. Not today.",
       "end": true
     }
   }
