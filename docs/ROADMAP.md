@@ -46,7 +46,7 @@ Phases 2, 3, and 4 can proceed independently after the baseline is understood. C
 
 ### D01 Align the documentation with the released products
 
-**Status:** Open. ByteRush part done in this repository: README, ARCHITECTURE, DEPLOY, the passkey note, and ADR-B001 now match the catalog (73 lessons, 11 topics, 17 projects), the shared lesson/project streak, account switching, separate Plan sign-in, and link to release evidence. Plan and website documents remain. **Owner:** documentation across all three repositories. **Dependency:** recorded baseline.
+**Status:** Open. ByteRush part done in this repository: README, ARCHITECTURE, DEPLOY, the passkey note, and ADR-B001 now match the catalog (73 lessons, 11 topics, 17 projects), the shared lesson/project streak, account switching, separate Plan sign-in, and link to release evidence. Website part done in [labthrift#6](https://github.com/zemdregon/labthrift/pull/6): the README describes how the site runs and how to add a guide, release status and TDD point to the checks, and guide counts are derived from the content. Plan documents remain. **Owner:** documentation across all three repositories. **Dependency:** recorded baseline.
 
 Reconcile stale release-language and links across the 27 documents, READMEs, deployment instructions, and passkey notes. ByteRush's older README still describes a lesson-only streak, old content counts, and passkeys as shareable across apps without making the separate account stores sufficiently clear. ADR-B001 also still says implementation is under verification. Preserve historical decisions while linking their current execution evidence.
 
@@ -54,7 +54,7 @@ Reconcile stale release-language and links across the 27 documents, READMEs, dep
 
 ### C01 Restore the two missing source guide destinations
 
-**Status:** Partial; written, awaiting deploy. `/guides/immich` and `/guides/prism` (PhotoPrism, per Ender's 2026-10-04 decision) and their Markdown twins are in [labthrift#4](https://github.com/zemdregon/labthrift/pull/4). C01 closes when they are live and ByteRush links them again. **Owner:** website editorial, with ByteRush integration review. **Dependency:** source-guide inventory in the merge receipt.
+**Status:** Partial; merged, awaiting deploy. `/guides/immich` and `/guides/prism` (PhotoPrism, per Ender's 2026-10-04 decision) and their Markdown twins are on labthrift main ([labthrift#4](https://github.com/zemdregon/labthrift/pull/4), expanded to a full PhotoPrism install in [labthrift#5](https://github.com/zemdregon/labthrift/pull/5)). C01 closes when they are live and ByteRush links them again. **Owner:** website editorial, with ByteRush integration review. **Dependency:** source-guide inventory in the merge receipt.
 
 Resolve `/guides/immich` and `/guides/prism`, preserving the imported source URLs and provenance. Prefer substantive guides and matching Markdown twins at those destinations. If the editorial decision is to use another canonical guide or retain an unavailable guide, record that decision and explicitly revise the continuity requirement; do not silently count a 404 or a placeholder as complete.
 
@@ -148,7 +148,7 @@ Recommended path: adopt a conditional database write using the expected revision
 
 ### W01 Verify public serving and guide continuity
 
-**Status:** Partial. The local request matrix passes (`npm test`, `npm run check` in [labthrift#4](https://github.com/zemdregon/labthrift/pull/4)), which fixed negotiated-Markdown HEAD length and the type of missing `/md` pages. The live run and C01 remain. **Owner:** website Worker and QA. **Dependency:** C01 for full source continuity.
+**Status:** Partial. The local request matrix passes (`npm test`, `npm run check` in [labthrift#4](https://github.com/zemdregon/labthrift/pull/4)), which fixed negotiated-Markdown HEAD length and the type of missing `/md` pages. All 15 source-guide URLs resolve locally. Only the live run after the next deploy remains. **Owner:** website Worker and QA. **Dependency:** C01 for full source continuity.
 
 Test GET/HEAD for representative pages and all project source-guide URLs. Cover Markdown/HTML Accept preferences including q-values and ties, `Vary: Accept`, missing-twin fallback, Markdown HEAD body/length, direct `/md` routes, and unknown-page behavior. Compare available HTML/Markdown twins for materially consistent instructions.
 
@@ -156,7 +156,7 @@ Test GET/HEAD for representative pages and all project source-guide URLs. Cover 
 
 ### W02 Verify publication boundaries and discovery
 
-**Status:** Partial. Locally, every private path returns 404, sitemap and llms targets resolve, discovery headers and media types pass, and ByteRush/Plan links are labelled with no Runs links ([labthrift#4](https://github.com/zemdregon/labthrift/pull/4)). The live run, the D01 wording pass and the final C01 audit remain. **Owner:** website publishing and QA. **Dependency:** D01 and C01 for final catalog/reference audit.
+**Status:** Partial. Locally, every private path returns 404, sitemap and llms targets resolve, discovery headers and media types pass, and ByteRush/Plan links are labelled with no Runs links ([labthrift#4](https://github.com/zemdregon/labthrift/pull/4)). Guide counts and the Markdown index are now derived from the content and checked by `npm test` ([labthrift#6](https://github.com/zemdregon/labthrift/pull/6)). Only the live run after the next deploy remains. **Owner:** website publishing and QA. **Dependency:** D01 and C01 for final catalog/reference audit.
 
 Review the root asset directory and publishing exclusions. Verify docs, migrations, credentials, dependencies, and local runtime state cannot be served. Check cache/security/content headers, workers.dev noindex behavior, homepage Link headers, catalog media type, OpenAPI, llms text, robots, sitemap, and correct ByteRush/Plan destinations. Check responsive reading and honest product labels.
 
