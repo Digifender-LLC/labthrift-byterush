@@ -106,7 +106,7 @@ Compare the existing tests with every contract in FRD/SRS. Fill meaningful gaps 
 
 ### P01 Verify notebook ownership and editing contracts
 
-**Status:** Open verification of existing features. **Owner:** Plan frontend/backend and QA. **Dependency:** disposable users and a repeatable local Worker/D1 test setup.
+**Status:** Partial. Locally verified on merged [labthrift-plan#4](https://github.com/zemdregon/labthrift-plan/pull/4) ([verification](https://github.com/zemdregon/labthrift-plan/blob/main/docs/design/verification-2026-10-04.md)). Two defects were fixed: a malformed save wiped the notebook, and slow autosaves conflicted with themselves. The deploy and a live smoke with a disposable account remain. **Owner:** Plan frontend/backend and QA. **Dependency:** disposable users and a repeatable local Worker/D1 test setup.
 
 Exercise one lab per user, cross-account isolation, equipment, services, checklists, rack slots/ports, hosts, purchase notes, and capacity estimates. Check sanitization and boundaries, including 100-item collections, 1–42 rack units, string lengths, numeric limits, and invalid references. Check autosave feedback, missing notebook behavior, and sequential stale saves with explicit force resolution.
 
@@ -114,7 +114,7 @@ Exercise one lab per user, cross-account isolation, equipment, services, checkli
 
 ### P02 Verify portable imports and exports
 
-**Status:** Open verification. **Owner:** Plan frontend/backend and QA. **Dependency:** P01 fixtures.
+**Status:** Partial. Locally verified in labthrift-plan#4 ([verification](https://github.com/zemdregon/labthrift-plan/blob/main/docs/design/verification-2026-10-04.md)). Fixed: non-object imports wiped the notebook, importing into a missing notebook returned 200, and imported text could run script. Deploy and live check remain. **Owner:** Plan frontend/backend and QA. **Dependency:** P01 fixtures.
 
 Round-trip schema-v2 exports and legacy/v1/v2 imports, reject unknown versions, and verify sanitization and replacement semantics. Include representative inventory, services, checklist, rack, hosts, BOM, and capacity data. Importing never transfers credentials.
 
@@ -122,7 +122,7 @@ Round-trip schema-v2 exports and legacy/v1/v2 imports, reject unknown versions, 
 
 ### P03 Verify passkeys and account lifecycle
 
-**Status:** Open verification. **Owner:** Plan authentication/backend and QA. **Dependency:** isolated test users and supported passkey devices/origins.
+**Status:** Partial. Positive and negative cases pass locally with software and virtual authenticators ([verification](https://github.com/zemdregon/labthrift-plan/blob/main/docs/design/verification-2026-10-04.md)). Still open: physical-passkey ceremonies and second-device enrollment at `https://plan.labthrift.com`, which need the owner's devices. **Owner:** Plan authentication/backend and QA. **Dependency:** isolated test users and supported passkey devices/origins.
 
 Test register/login, `/auth/me`, expiry, enrollment on a second device, passkey listing/addition/revocation, last-passkey protection, and account deletion using disposable data. Verify configured RP/origin checks and ownership of sessions, enrollment tokens, and notebook records. Document the lack of email recovery rather than inventing a recovery promise.
 
@@ -130,7 +130,7 @@ Test register/login, `/auth/me`, expiry, enrollment on a second device, passkey 
 
 ### P04 Verify offline behavior and aggregate metrics
 
-**Status:** Open verification. **Owner:** Plan frontend/backend and QA. **Dependency:** P01 and P03 journeys.
+**Status:** Partial. Metric schema/payload and offline browser checks pass locally ([verification](https://github.com/zemdregon/labthrift-plan/blob/main/docs/design/verification-2026-10-04.md)). Fixed: the service worker never registered, one failed request stopped further save attempts, and the offline banner overpromised. Deploy and live check remain. **Owner:** Plan frontend/backend and QA. **Dependency:** P01 and P03 journeys.
 
 Interrupt networking during navigation, session checks, and saves. Confirm fallback/error states distinguish unsaved changes from successful persistence and never invent authentication. Inspect metric schema and write payloads for day/metric/count aggregation without user IDs, raw IP, or raw UA.
 
@@ -138,7 +138,7 @@ Interrupt networking during navigation, session checks, and saves. Confirm fallb
 
 ### P05 Resolve the proposed atomic save improvement
 
-**Status:** Decision; recommended reliability follow-up, not implemented or accepted by the original merge. **Owner:** Plan maintainer. **Dependency:** P01 baseline and ADR-P004.
+**Status:** Adopted and implemented (ADR-P006, new requirement SR-P10) in labthrift-plan#4, merged under the owner's standing merge authority. The race was reproduced on the old code; locally, racing saves now produce exactly one winner and a recoverable conflict. Deployed verification remains. **Owner:** Plan maintainer. **Dependency:** P01 baseline and ADR-P004.
 
 Recommended path: adopt a conditional database write using the expected revision in the UPDATE predicate, handle zero-row updates as conflicts, and ensure revisions cannot collide for successful rapid writes. Define explicit force-save and import behavior before implementation. Add a new verifiable concurrency requirement and update TDD/LLD/ADR together.
 
@@ -174,7 +174,7 @@ Test UTC-day/path/kind bucketing, normalization and length limits, eligible meth
 
 ### X01 Establish repeatable checks for each repository
 
-**Status:** Partial. ByteRush chose CI: `.github/workflows/ci.yml` runs lint, Worker typecheck, tests and build on every pull request, documented in [test coverage](design/test-coverage.md). The website has `npm test` and `npm run check [base-url]` as a documented manual release gate ([labthrift#4](https://github.com/zemdregon/labthrift/pull/4)). Plan remains open. **Owner:** maintainers of all three repositories. **Dependency:** B03, P01–P04, W01–W03 as their checks become available.
+**Status:** Partial. ByteRush chose CI: `.github/workflows/ci.yml` runs lint, Worker typecheck, tests and build on every pull request, documented in [test coverage](design/test-coverage.md). The website has `npm test` and `npm run check [base-url]` as a documented manual release gate ([labthrift#4](https://github.com/zemdregon/labthrift/pull/4)). Plan chose CI: `.github/workflows/test.yml` runs `npm run test:api` and `npm run test:browser` on every pull request ([labthrift-plan#4](https://github.com/zemdregon/labthrift-plan/pull/4)). **Owner:** maintainers of all three repositories. **Dependency:** B03, P01–P04, W01–W03 as their checks become available.
 
 Keep commands alongside the code. ByteRush already has `npm test`, `npm run lint`, `npm run typecheck:worker`, `npm run build`, and `node tests/sync-integration.mjs` for a running local preview. The integration script's `--remote` option targets live ByteRush and must remain an explicit production test operation. The website now has `npm test` and `npm run check [base-url]` ([labthrift#4](https://github.com/zemdregon/labthrift/pull/4)). Plan still needs documented, repeatable checks for the contracts above; its package scripts currently do not expose a test suite.
 
@@ -231,7 +231,8 @@ Each numbered requirement appears once in the tables below. Tasks often contribu
 | BR-P2, PR-P1, PR-P2, PR-P3, FR-P3, FR-P4, SR-P1, SR-P2 | P01 |
 | BR-P3, PR-P5, FR-P6, FR-P7, SR-P3, SR-P4 | P02 |
 | BR-P5, SR-P7 | P04 |
-| PR-P4, FR-P5, SR-P5 | P01; P05 adds stronger concurrency semantics only if adopted |
+| PR-P4, FR-P5, SR-P5 | P01 |
+| SR-P10 (added by adopted P05) | P05 |
 | PR-P6, FR-P1, FR-P2, FR-P8, FR-P9, SR-P6 | P03 |
 | PR-P7, FR-P10, SR-P9 | P04 |
 
