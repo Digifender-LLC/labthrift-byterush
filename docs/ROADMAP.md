@@ -46,7 +46,7 @@ Phases 2, 3, and 4 can proceed independently after the baseline is understood. C
 
 ### D01 Align the documentation with the released products
 
-**Status:** Open. ByteRush part done in this repository: README, ARCHITECTURE, DEPLOY, the passkey note, and ADR-B001 now match the catalog (73 lessons, 11 topics, 17 projects), the shared lesson/project streak, account switching, separate Plan sign-in, and link to release evidence. Plan and website documents remain. **Owner:** documentation across all three repositories. **Dependency:** recorded baseline.
+**Status:** Open. ByteRush part done in this repository: README, ARCHITECTURE, DEPLOY, the passkey note, and ADR-B001 now match the catalog (73 lessons, 11 topics, 17 projects), the shared lesson/project streak, account switching, separate Plan sign-in, and link to release evidence. Plan part done in [labthrift-plan#5](https://github.com/zemdregon/labthrift-plan/pull/5). Its README now covers accounts, separate passkey sign-in, conflicts, import/export, development, deploy and checks. Every Plan design document links the roadmap, release status and the October 4 verification, and ADR-P006 is recorded as merged but not deployed. Website documents remain. **Owner:** documentation across all three repositories. **Dependency:** recorded baseline.
 
 Reconcile stale release-language and links across the 27 documents, READMEs, deployment instructions, and passkey notes. ByteRush's older README still describes a lesson-only streak, old content counts, and passkeys as shareable across apps without making the separate account stores sufficiently clear. ADR-B001 also still says implementation is under verification. Preserve historical decisions while linking their current execution evidence.
 
