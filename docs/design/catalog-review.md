@@ -15,7 +15,7 @@ Review date: 2026-10-03. Canonical roadmap: [ROADMAP.md](../ROADMAP.md) (C02).
 
 The result column and notes below record the state found before these edits. Items marked "Pass with notes" are recorded for editorial follow-up and were not changed. **Prism decision (2026-10-04):** Ender chose a full walkthrough. `prism-intro` is now a 16-beat, 4-branch PhotoPrism first install that follows the new `/guides/prism` guide (labthrift PR #5) step for step: read-only, house network only, reading the house share. The catalog totals are now 179 beats and 33 branch points. The notes for project 14 below describe the earlier stub. **Immich (2026-10-04):** both Immich projects now follow the new `/guides/immich` guide's commands (requirements check, Docker script, release files and `.env`, health check, first admin, phone backup, disk check, nightly-dump backup, extra user, updates) with their beat graphs unchanged. All 17 projects have now been compared with a source guide; C02 is complete once this change merges.
 
-**Scope.** All 17 project graphs in `tech-dose/src/content/projects/*.json` (168 beats, 30 branch points; this matches `tests/projects.test.ts`). Each one was checked against its `sourceGuide` source in `labthrift/` (the HTML in `guides/<slug>.html` and the Markdown twin in `md/guides/<slug>.md`). Runtime wording in `src/components/feed/ProjectView.tsx` was also checked, because it frames every walkthrough.
+**Scope.** All 17 project graphs in `src/content/projects/*.json` (179 beats, 33 branch points; this matches `tests/projects.test.ts`). Each one was checked against its `sourceGuide` source in `labthrift/` (the HTML in `guides/<slug>.html` and the Markdown twin in `md/guides/<slug>.md`). Runtime wording in `src/components/feed/ProjectView.tsx` was also checked, because it frames every walkthrough.
 
 **Criteria.**
 1. Agreement with the source guide's steps and commands.
@@ -37,7 +37,7 @@ The result column and notes below record the state found before these edits. Ite
   - `first-weekend` / `ssh-checkbox`: "the SSH run"
   - `prism-intro` / `start`: "This run is a stub"
   - `photos-backup-pick` / `skip`: "house-folder backup run"
-- **Missing sources.** `https://labthrift.com/guides/immich` and `/guides/prism` have no source anywhere in the website repo. There is no `guides/immich.html`, `guides/prism.html` or Markdown twin, and a grep for "immich" or "prism" across the website repo finds nothing. Three projects point at these URLs, and the UI labels them "Source guide · currently unavailable". This is roadmap item C01.
+- **Missing sources (resolved).** When first reviewed, `https://labthrift.com/guides/immich` and `/guides/prism` had no source anywhere in the website repo. Both now exist as `guides/<slug>.html` with Markdown twins (C01, labthrift#4 and #5); live acceptance waits on that deploy. The original finding follows. There is no `guides/immich.html`, `guides/prism.html` or Markdown twin, and a grep for "immich" or "prism" across the website repo finds nothing. Three projects point at these URLs, and the UI labels them "Source guide · currently unavailable". This is roadmap item C01.
 - **Missing Markdown twins.** `add-local-dns-name` and `when-house-disk-full` have HTML sources but no Markdown twin in `md/guides/`. This is relevant to C01's "matching Markdown representations".
 - **Shared source URL.** Fifteen unique source URLs cover the 17 projects. `first-backup` and `photos-backup-pick` share `/guides/first-backup`, and the two Immich projects share `/guides/immich`.
 
@@ -53,17 +53,17 @@ The result column and notes below record the state found before these edits. Ite
 | 6 | first-file-share | A file share | guides/first-file-share.html + md twin. Exists | 7 / 1 | Condensed full walkthrough | Pass with notes |
 | 7 | first-ssh | SSH from the couch | guides/first-ssh.html + md twin. Exists | 21 / 3 | Full walkthrough, expanded troubleshooting | **Needs edit** |
 | 8 | first-weekend | Your first weekend | guides/first-weekend.html + md twin. Exists | 21 / 1 | Full nine-step walkthrough, expanded | **Needs edit** |
-| 9 | immich-first-weekend | Immich: first weekend | guides/immich: **missing (404)** | 8 / 2 | Short setup walkthrough; no source to compare | Pass with notes |
-| 10 | immich-make-it-better | Immich: make it better | guides/immich: **missing (404)** | 6 / 1 | Short follow-up; no source to compare | **Needs edit** |
+| 9 | immich-first-weekend | Immich: first weekend | guides/immich.html + md twin. Exists (shared URL) | 8 / 2 | Short setup walkthrough following the published guide's commands | Pass with notes |
+| 10 | immich-make-it-better | Immich: make it better | guides/immich.html + md twin. Exists (shared URL) | 6 / 1 | Short follow-up following the published guide | Fixed (label edit applied) |
 | 11 | lab-plan-passkeys | Keep a lab plan with a passkey, not an email | guides/lab-plan-passkeys.html + md twin. Exists | 6 / 1 | Short explainer of the Plan app; full coverage | Pass with notes |
 | 12 | local-chat-on-the-pc | Run a local chat on the old PC | guides/local-chat-on-the-pc.html + md twin. Exists | 6 / 1 | Condensed full walkthrough | Pass with notes |
 | 13 | photos-backup-pick | Photo backup: pick a path | guides/first-backup.html + md twin. Exists (shared URL) | 6 / 2 | Interest picker; content not in the source guide | Pass with notes |
-| 14 | prism-intro | Prism intro | guides/prism: **missing (404)** | 5 / 1 | **Short introductory stub**; no install steps | Pass with notes (scope decision pending) |
+| 14 | prism-intro | PhotoPrism first install | guides/prism.html + md twin. Exists | 16 / 4 | **Full first-install walkthrough** (decided 2026-10-04); read-only, house network only | Pass with notes (scope accepted) |
 | 15 | start-with-what-you-have | Start with what you already have | guides/start-with-what-you-have.html + md twin. Exists | 21 / 3 | Full walkthrough, expanded | **Needs edit** |
 | 16 | what-os-to-pick | What OS to put on it | guides/what-os-to-pick.html + md twin. Exists | 22 / 4 | Full walkthrough, expanded | Pass with notes |
 | 17 | when-house-disk-full | When the computer's disk is full | guides/when-house-disk-full.html. Exists; **no md twin** | 7 / 2 | Condensed troubleshooting walkthrough | Pass with notes |
 
-Totals: 168 beats and 30 branch points. 2 Pass, 11 Pass with notes, 4 Needs edit.
+Totals: 179 beats and 33 branch points, recounted from the catalog JSON on 2026-10-22 (it was 168 and 30 before the Prism expansion). Results as first recorded on 2026-10-03: 2 Pass, 11 Pass with notes, 4 Needs edit. The four Needs edit items (7, 8, 10, 15) were fixed in the same change, and the rows for projects 9, 10 and 14 were refreshed after the 2026-10-04 guide work.
 
 ## Per-project notes
 
@@ -141,13 +141,15 @@ Totals: 168 beats and 30 branch points. 2 Pass, 11 Pass with notes, 4 Needs edit
 - **Plan and gear:** Neither is mentioned.
 
 ### 9. immich-first-weekend: Pass with notes
+- **Update (2026-10-04):** the guide now exists and the project follows its commands. The notes below were written against the earlier 404.
 - **Source:** `https://labthrift.com/guides/immich` is **missing (404)**, with no HTML or Markdown in the website repo, so agreement with a source could not be checked. The content (Docker plus Compose, official compose file and `.env`, `UPLOAD_LOCATION`, web UI on port 2283, phone app on the LAN, no public exposure) is internally consistent. This review did not compare it against a source.
 - **Prerequisites:** `prereq` states the Docker, Compose, disk and LAN prerequisites, and `need-docker` gives the check (`docker compose version`).
 - **Choices:** Explicit, and the status effects come from the learner's own declaration.
   - **Label note:** "Uploads work — mark Immich installed" also sets `photos` installed, which the label does not mention.
   - **Optional fix:** "Uploads work — mark Immich and photos installed".
 
-### 10. immich-make-it-better: **Needs edit**
+### 10. immich-make-it-better: Fixed
+- **Update:** the label fix below was applied, and the project now follows the published guide. The notes below describe the state found before the edit.
 - **Source:** `guides/immich` is **missing (404)**.
 - **Issue (unlabeled gear status):** On beat `users`, the choice "Done for now" carries `setsStatus: [{itemId: "immich", status: "installed"}]`. The label does not say it changes gear status. The runtime promises "Your gear only changes when you explicitly choose a gear status." A learner who opens this from the feed without having marked Immich installed would have it marked silently.
   - **Minimal fix:** Change the label to "Done for now — keep Immich marked installed".
@@ -179,7 +181,8 @@ Totals: 168 beats and 30 branch points. 2 Pass, 11 Pass with notes, 4 Needs edit
   - **Optional fix:** "The house-folder backup walkthrough still covers files."
 - **Gear:** No detection claims. The summary "Sets your stack." refers to the learner's choices.
 
-### 14. prism-intro: Pass with notes (scope decision pending)
+### 14. prism-intro: Pass with notes (scope accepted)
+- **Update (2026-10-04):** the scope decision was made. Prism is PhotoPrism, and the project is now a 16-beat, 4-branch first-install walkthrough following `/guides/prism`. Everything below describes the earlier 5-beat stub and is kept as history.
 - **Explicit scope statement:** The imported Prism project is a **short introductory stub**: 5 beats and 1 branch point. Its body is limited to:
   - `start`: what Prism is relative to Immich.
   - `fit`: who it suits.
