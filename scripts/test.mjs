@@ -3,7 +3,7 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve, sep } from 'node:path';
 import { spawnSync } from 'node:child_process';
-const tests=['projects','accounts','learning','worker-api'];
+const tests=['projects','accounts','learning','worker-api','preferences'];
 // Worker route tests replace session lookup and passkey routes with test doubles.
 const stubs={name:'worker-stubs',setup(b){b.onResolve({filter:/^\.\/(session|auth)$/},a=>a.importer.includes(sep+'worker'+sep)?{path:resolve('tests/stubs/worker-'+a.path.slice(2)+'.ts')}:undefined);}};
 const dir=await mkdtemp(join(tmpdir(),'byterush-test-'));

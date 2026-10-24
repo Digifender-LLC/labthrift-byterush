@@ -6,7 +6,7 @@ Updated 2026-10-03 for roadmap items [B03 and X01](../ROADMAP.md). This maps eac
 
 | Command | What it covers | Needs |
 |---|---|---|
-| `npm test` | Content validator, then 19 Node tests: graphs, rewards, merges, store/account flows, Worker sync routes, and the service worker | Nothing beyond `npm ci` |
+| `npm test` | Content validator, then 21 Node tests: graphs, rewards, merges, store/account flows, Worker sync routes, and the service worker | Nothing beyond `npm ci` |
 | `npm run lint` | ESLint | Nothing |
 | `npm run typecheck:worker` | Worker TypeScript | Nothing |
 | `npm run build` | Next export, service-worker cache identity, then `scripts/verify-offline-shell.mjs` (every project graph ships in a precached asset; no API path is precached) | Nothing |
@@ -36,7 +36,8 @@ The release gate is CI (`.github/workflows/ci.yml`), which runs the first four r
 | API responses are `no-store` and never cached by the service worker | SR-B10 | `worker-api.test.ts` › API answers are never cacheable; `service-worker.test.mjs` › loaded projects reload offline |
 | Loaded projects reload offline; upgrades drop old caches and serve the new shell offline | SR-B10 | `service-worker.test.mjs`; `scripts/verify-offline-shell.mjs` during build |
 | 17 graphs, valid edges, reachability, terminal paths, topics and gear | SR-B1, SR-B2 | `validate-runs-source.mjs`; `projects.test.ts` › all 17 graphs |
-| Touch, keyboard, focus, reduced motion and mute | SR-B11 | Manual (B01) |
+| Mute silences every sound, persists, survives reload and is not cleared by reset | SR-B11 | `preferences.test.ts` |
+| Touch, keyboard, focus and reduced motion | SR-B11 | Manual (B01) |
 | Real passkey registration, sign-in, second device, expired session | FR-B12, SR-B8 | Manual (B02); routes in `worker/auth.ts` are replaced by a stub in `worker-api.test.ts` |
 
 ## Limits
