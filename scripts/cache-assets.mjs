@@ -1,6 +1,6 @@
 import {readdir,readFile,writeFile,stat} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
-const files=(await readdir('out',{recursive:true})).sort();
+const files=(await readdir('out',{recursive:true})).map(p=>p.replaceAll('\\','/')).sort();
 const assets=files.filter(p=>p.startsWith('_next/static/')&&/\.(js|css|woff2?)$/.test(p)).map(p=>'/'+p);
 const sw=await readFile('public/sw.js','utf8');
 // Include pages and route payloads as well as bundles: client navigation must
