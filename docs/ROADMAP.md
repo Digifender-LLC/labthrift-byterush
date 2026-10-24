@@ -80,7 +80,7 @@ After authorization, delete only `zemdregon/labthrift-runs` and verify its absen
 
 ### B01 Finish device and accessibility acceptance
 
-**Status:** Partial. **Owner:** ByteRush frontend and QA. **Dependency:** deployed project experience.
+**Status:** Partial. The mute preference is now covered by an automated test (`tests/preferences.test.ts`); touch, keyboard, focus and reduced-motion cases remain manual. **Owner:** ByteRush frontend and QA. **Dependency:** deployed project experience.
 
 Use a physical touch device and a desktop keyboard to exercise long steps, inner scrolling versus feed swiping, branch choices, Back, Pause/Resume, Skip/Replay, and explicit completion. Check focus visibility/order, readable code/glossary content, reduced motion, and mute. Existing viewport/browser checks remain evidence for the cases they covered.
 
