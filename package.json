@@ -52,6 +52,6 @@
     "sharp": "^0.35.4",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "wrangler": "^4.129.0"
+    "wrangler": "^4.156.0"
   }
 }
